@@ -43,7 +43,13 @@ export default function ReportItem({ report }: ReportItemProps) {
   };
 
   const getStatusBadge = () => {
-    switch (report.status) {
+    // Check if the report has a completed_at property
+    const isCompleted = !!report.completed_at;
+    
+    // Use the explicit status field with fallback logic
+    const status = report.status || (isCompleted ? "completed" : "processing");
+    
+    switch (status) {
       case "completed":
         return (
           <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
@@ -66,7 +72,13 @@ export default function ReportItem({ report }: ReportItemProps) {
           </Badge>
         );
       default:
-        return null;
+        // For any unknown status, show as processing
+        return (
+          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+            <Clock className="mr-1 h-3 w-3 animate-spin" />
+            Processing
+          </Badge>
+        );
     }
   };
 

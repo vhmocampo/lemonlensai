@@ -36,6 +36,11 @@ export function useReports() {
       return response.json();
     },
     enabled: !!user || !!sessionId,
+    // Add polling every 10 seconds to keep the reports list updated
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+    // Add stale time to reduce unnecessary fetches when tab is visible
+    staleTime: 5000,
   });
   
   // Extract reports from the response - handle API format
