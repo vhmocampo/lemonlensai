@@ -38,12 +38,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Initialize session ID on load with 24 hour expiration
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const storedSessionId = localStorage.getItem("sessionId");
+    const sessionExpiry = localStorage.getItem("sessionExpiry");
     
-    // Always get a fresh session ID from the API on page load for anonymous users
+    const isSessionExpired = sessionExpiry && parseInt(sessionExpiry) < Date.now();
+    
+    // Check if user is logged in
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-    } else {
-      // For anonymous users, always get a new session from the API
+    } 
+    // Use the existing session ID if it's valid and not expired
+    else if (storedSessionId && !isSessionExpired) {
+      setSessionId(storedSessionId);
+      console.log("Using existing session ID:", storedSessionId);
+    } 
+    // Get a new session ID if none exists or the current one is expired
+    else {
+      // For anonymous users, get a new session from the API only if needed
       setIsLoading(true);
       
       // Get a session from the LemonLens API
