@@ -177,7 +177,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   <FormLabel>Year</FormLabel>
                   <Select
                     disabled={isLoadingYears || !form.watch("model")}
-                    onValueChange={field.value}
+                    onValueChange={field.onChange}
                     value={field.value}
                   >
                     <FormControl>

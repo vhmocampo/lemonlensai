@@ -43,11 +43,11 @@ export function useVehicleData() {
     enabled: !!selectedModelId && models.length > 0,
   });
   
-  // Transform the years array into the format our app expects
-  const years: VehicleYear[] = (yearsResponse?.years || []).map((yearStr, index) => ({
+  // Transform the years array into the format our app expects - but keep year as string
+  const years: any[] = (yearsResponse?.years || []).map((yearStr, index) => ({
     id: index + 1,
     modelId: selectedModelId || 0,
-    year: parseInt(yearStr) // Convert the year string to a number
+    year: yearStr // Keep as string to match form expectations
   }));
 
   const fetchModels = (makeId: number) => {
