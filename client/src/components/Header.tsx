@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLocation } from "wouter";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
 import { Eye } from "lucide-react";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const [, setLocation] = useLocation();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +17,10 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center">
+            <div 
+              className="flex-shrink-0 flex items-center cursor-pointer" 
+              onClick={() => setLocation("/")}
+            >
               {/* Logo */}
               <div className="h-10 w-10 rounded-full bg-lemon-500 flex items-center justify-center mr-2">
                 <Eye className="h-6 w-6 text-gray-900" />
