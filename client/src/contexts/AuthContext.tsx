@@ -47,7 +47,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       
       // Get a new session from the LemonLens API
-      apiRequest("GET", "session")
+      apiRequest("GET", "/session")
         .then(async (response) => {
           const data = await response.json();
           const newSessionId = data.session_id;
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest("POST", "auth/login", {
+      const response = await apiRequest("POST", "/auth/login", {
         email,
         password
       });
