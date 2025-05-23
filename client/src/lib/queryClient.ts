@@ -21,7 +21,18 @@ export async function apiRequest(
 ): Promise<Response> {
   // Get auth token from localStorage if available
   const userStr = localStorage.getItem("user");
-  const token = userStr ? JSON.parse(userStr).token : null;
+  let token = null;
+  
+  // Safely parse the user data and extract token
+  if (userStr) {
+    try {
+      const userData = JSON.parse(userStr);
+      token = userData.token;
+      console.log("Using auth token for request", endpoint);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+    }
+  }
   
   // Build full URL (ensure endpoint doesn't start with /)
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
@@ -37,10 +48,9 @@ export async function apiRequest(
   // Add authorization header if token exists
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+    console.log("Added Authorization header for request", endpoint);
   }
-  // Note: We don't add session ID in the headers anymore - 
-  // it should be included in the request body for specific endpoints that need it
-  
+
   const res = await fetch(url, {
     method,
     headers,
@@ -62,7 +72,17 @@ export const getQueryFn: <T>(options: {
     
     // Get auth token from localStorage if available
     const userStr = localStorage.getItem("user");
-    const token = userStr ? JSON.parse(userStr).token : null;
+    let token = null;
+    
+    // Safely parse the user data and extract token
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr);
+        token = userData.token;
+      } catch (e) {
+        console.error("Error parsing user data:", e);
+      }
+    }
     
     // Get session ID from localStorage if available and not authenticated
     const sessionId = !token ? localStorage.getItem("sessionId") : null;
@@ -100,6 +120,7 @@ export const getQueryFn: <T>(options: {
     // Add authorization header if token exists
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
+      console.log("Added Authorization header for GET request", endpoint);
     }
     
     // Always include API key for LemonLens API

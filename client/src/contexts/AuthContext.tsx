@@ -64,7 +64,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const data = await response.json();
           
           // Get the exact UUID session_id from the API response
-          const newSessionId = data.session_id;
+          // Some APIs return session_id directly, others may have it nested in a data object
+          const newSessionId = data.session_id || (data.data && data.data.session_id);
+          
+          if (!newSessionId) {
+            console.error("No session ID found in API response", data);
+            throw new Error("No session ID in response");
+          }
           
           // Set session ID with 24 hour expiration
           const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
@@ -223,8 +229,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     apiRequest("GET", "/session")
       .then(async (response) => {
         const data = await response.json();
+        
         // Get the exact session_id from the API response
-        const newSessionId = data.session_id;
+        // Some APIs return session_id directly, others may have it nested in a data object
+        const newSessionId = data.session_id || (data.data && data.data.session_id);
+        
+        if (!newSessionId) {
+          console.error("No session ID found in API response during logout", data);
+          throw new Error("No session ID in logout response");
+        }
+        
         // Set session ID with 24 hour expiration
         const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
         localStorage.setItem("sessionId", newSessionId);
