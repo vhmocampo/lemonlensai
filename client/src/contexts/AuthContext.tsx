@@ -35,15 +35,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { toast } = useToast();
 
-  // Initialize session ID on load
+  // Initialize session ID on load with 24 hour expiration
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedSessionId = localStorage.getItem("sessionId");
+    const sessionExpiry = localStorage.getItem("sessionExpiry");
+    
+    const isSessionExpired = sessionExpiry && parseInt(sessionExpiry) < Date.now();
     
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-    } else if (!storedSessionId) {
-      // Create a new session if we don't have a user or session ID
+    } else if (!storedSessionId || isSessionExpired) {
+      // Create a new session if we don't have a user or session ID or if the session is expired
       setIsLoading(true);
       
       // Get a new session from the LemonLens API
@@ -51,14 +54,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .then(async (response) => {
           const data = await response.json();
           const newSessionId = data.session_id;
+          
+          // Set session ID with 24 hour expiration
+          const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
           localStorage.setItem("sessionId", newSessionId);
+          localStorage.setItem("sessionExpiry", expiryTime.toString());
           setSessionId(newSessionId);
         })
         .catch(error => {
           console.error("Error creating session:", error);
           // Fallback to a local session ID if API fails
           const localSessionId = nanoid();
+          const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
           localStorage.setItem("sessionId", localSessionId);
+          localStorage.setItem("sessionExpiry", expiryTime.toString());
           setSessionId(localSessionId);
         })
         .finally(() => {
@@ -204,7 +213,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       .then(async (response) => {
         const data = await response.json();
         const newSessionId = data.session_id;
+        // Set session ID with 24 hour expiration
+        const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
         localStorage.setItem("sessionId", newSessionId);
+        localStorage.setItem("sessionExpiry", expiryTime.toString());
         setSessionId(newSessionId);
       })
       .catch(error => {

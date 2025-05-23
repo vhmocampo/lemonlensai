@@ -37,6 +37,12 @@ export async function apiRequest(
   // Add authorization header if token exists
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    // For anonymous users, include the session ID
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      headers["X-Session-ID"] = sessionId;
+    }
   }
   
   const res = await fetch(url, {
