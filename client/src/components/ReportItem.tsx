@@ -18,7 +18,9 @@ export default function ReportItem({ report }: ReportItemProps) {
 
   const handleRetry = async () => {
     try {
-      await retryReport(report.id);
+      // Convert ID to string in case it's a UUID string from the API
+      const reportId = typeof report.id === 'string' ? report.id : report.id;
+      await retryReport(reportId);
       toast({
         title: "Processing Restarted",
         description: "Your report is being processed again.",
@@ -32,8 +34,12 @@ export default function ReportItem({ report }: ReportItemProps) {
     }
   };
 
-  const formatDate = (date: Date) => {
-    return formatDistanceToNow(new Date(date), { addSuffix: true });
+  const formatDate = (dateString: string | Date) => {
+    try {
+      return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+    } catch (error) {
+      return 'Just now';
+    }
   };
 
   const getStatusBadge = () => {

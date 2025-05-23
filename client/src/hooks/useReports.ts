@@ -22,15 +22,27 @@ export function useReports() {
       ? { sessionId: sessionId }
       : null;
 
+  // Build the query URL with session_id as a query parameter for anonymous users
+  const reportUrl = user 
+    ? "/reports" 
+    : sessionId 
+      ? `/reports?session_id=${sessionId}`
+      : "/reports";
+      
   const { data: reportsResponse, isLoading, refetch } = useQuery<{reports: Report[]}>({
-    queryKey: ["/reports"],
-    // No need for a custom queryFn as our updated queryClient already handles
-    // adding the auth token or session ID to the request
+    queryKey: ["/reports", user?.id || sessionId],
+    queryFn: async () => {
+      const response = await apiRequest("GET", reportUrl);
+      return response.json();
+    },
     enabled: !!user || !!sessionId,
   });
   
-  // Extract reports from the response
-  const reports = reportsResponse?.reports || [];
+  // Extract reports from the response - handle both formats
+  // The API might return an array directly or an object with a reports property
+  const reports = Array.isArray(reportsResponse) 
+    ? reportsResponse 
+    : reportsResponse?.reports || [];
 
   const createMutation = useMutation({
     mutationFn: async (input: CreateReportInput) => {
@@ -70,9 +82,8 @@ export function useReports() {
   });
 
   const retryMutation = useMutation({
-    mutationFn: async (reportId: number) => {
-      // No need to add query parameters as the auth token or session_id 
-      // is automatically included in our request setup
+    mutationFn: async (reportId: string | number) => {
+      // The report ID could be a UUID string from the API
       const response = await apiRequest("POST", `/reports/${reportId}/retry`);
       return response.json();
     },

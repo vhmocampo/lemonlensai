@@ -18,7 +18,7 @@ export default function ReportsList({ onCreateReport }: ReportsListProps) {
         <div className="flex justify-center items-center py-10">
           <div className="animate-spin h-12 w-12 border-4 border-lemon-500 border-t-transparent rounded-full"></div>
         </div>
-      ) : reports.length === 0 ? (
+      ) : !reports || reports.length === 0 ? (
         // Empty state
         <div className="text-center py-12">
           <FileText className="mx-auto h-12 w-12 text-gray-400" />
