@@ -20,8 +20,9 @@ function Router() {
   
   return (
     <Switch>
-      {/* Show the landing page if not authenticated, home page if authenticated */}
+      {/* Landing page is default, with explicit route to home for anonymous access */}
       <Route path="/" component={isAuthenticated ? Home : Landing} />
+      <Route path="/home" component={Home} />
       <Route path="/report/:reportId" component={ReportDetail} />
       <Route component={NotFound} />
     </Switch>

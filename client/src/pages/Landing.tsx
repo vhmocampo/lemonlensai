@@ -38,7 +38,7 @@ export default function Landing() {
   };
 
   const startAnonymous = () => {
-    setLocation("/");
+    setLocation("/home");
   };
 
   return (
