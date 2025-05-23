@@ -3,6 +3,9 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 // LemonLens API base URL
 const API_BASE_URL = "https://lemonlensapp.com/api/v1";
 
+// Add API key accessor for use throughout the application
+export const getApiKey = () => process.env.VEHICLE_API_KEY || import.meta.env.VITE_VEHICLE_API_KEY || "";
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     const text = (await res.text()) || res.statusText;

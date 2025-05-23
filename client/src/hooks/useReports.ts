@@ -23,7 +23,7 @@ export function useReports() {
       : null;
 
   const { data: reports = [], isLoading, refetch } = useQuery<Report[]>({
-    queryKey: ["/reports"],
+    queryKey: ["/reports/list"],
     // No need for a custom queryFn as our updated queryClient already handles
     // adding the auth token or session ID to the request
     enabled: !!user || !!sessionId,
@@ -32,7 +32,7 @@ export function useReports() {
   const createMutation = useMutation({
     mutationFn: async (input: CreateReportInput) => {
       // LemonLens API will use the auth token or session_id from our request setup
-      const response = await apiRequest("POST", "/reports", {
+      const response = await apiRequest("POST", "/reports/create", {
         make: input.make,
         model: input.model,
         year: input.year,
@@ -42,7 +42,7 @@ export function useReports() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports/list"] });
     },
   });
 
@@ -54,7 +54,7 @@ export function useReports() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports/list"] });
     },
   });
 
