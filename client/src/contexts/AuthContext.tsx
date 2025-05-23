@@ -53,6 +53,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       apiRequest("GET", "/session")
         .then(async (response) => {
           const data = await response.json();
+          
+          // The API returns the session_id in this format
           const newSessionId = data.session_id;
           
           // Set session ID with 24 hour expiration
@@ -60,15 +62,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
           localStorage.setItem("sessionId", newSessionId);
           localStorage.setItem("sessionExpiry", expiryTime.toString());
           setSessionId(newSessionId);
+          
+          console.log("New session ID assigned:", newSessionId);
         })
         .catch(error => {
           console.error("Error creating session:", error);
-          // Fallback to a local session ID if API fails
-          const localSessionId = nanoid();
-          const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
-          localStorage.setItem("sessionId", localSessionId);
-          localStorage.setItem("sessionExpiry", expiryTime.toString());
-          setSessionId(localSessionId);
+          // If we can't get a session ID from the API, we'll need to try again later
+          // Not creating a fallback local ID as we need a valid one from the server
+          setIsLoading(false);
+          toast({
+            title: "Session Error",
+            description: "Could not create a session. Some features may be limited.",
+            variant: "destructive"
+          });
         })
         .finally(() => {
           setIsLoading(false);
@@ -212,19 +218,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     apiRequest("GET", "/session")
       .then(async (response) => {
         const data = await response.json();
+        // The API returns the session_id in this format
         const newSessionId = data.session_id;
         // Set session ID with 24 hour expiration
         const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
         localStorage.setItem("sessionId", newSessionId);
         localStorage.setItem("sessionExpiry", expiryTime.toString());
         setSessionId(newSessionId);
+        console.log("New session ID assigned on logout:", newSessionId);
       })
       .catch(error => {
         console.error("Error creating session:", error);
-        // Fallback to a local session ID if API fails
-        const localSessionId = nanoid();
-        localStorage.setItem("sessionId", localSessionId);
-        setSessionId(localSessionId);
+        // If we can't get a session ID from the API, we'll need to try again later
+        toast({
+          title: "Session Error",
+          description: "Could not create a session. Some features may be limited.",
+          variant: "destructive"
+        });
       });
     
     // Invalidate reports cache
