@@ -261,6 +261,43 @@ export default function ReportDetail() {
             </p>
           </div>
           
+          {/* Category Distribution */}
+          {result.category_counts && Object.keys(result.category_counts).length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-lg font-medium mb-3">Issue Categories</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {Object.entries(result.category_counts).map(([category, count], index) => (
+                  <div key={index} className="bg-gray-50 p-2 rounded-md text-center">
+                    <div className="text-sm font-medium capitalize">{category.replace('_', ' ')}</div>
+                    <div className="text-lg font-bold">{count}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Priority Distribution */}
+          {result.priority_counts && Object.keys(result.priority_counts).length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-lg font-medium mb-3">Issue Priority Distribution</h3>
+              <div className="flex space-x-4">
+                {Object.entries(result.priority_counts).map(([priority, count], index) => (
+                  <div key={index} 
+                    className={`flex-1 p-3 rounded-md text-center ${
+                      priority === 'low' 
+                        ? 'bg-yellow-50 text-yellow-800' 
+                        : priority === 'medium' 
+                          ? 'bg-orange-50 text-orange-800' 
+                          : 'bg-red-50 text-red-800'
+                    }`}>
+                    <div className="text-sm font-medium capitalize">{priority}</div>
+                    <div className="text-xl font-bold">{count}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <Separator />
           
           {/* Issue Sections */}
@@ -286,10 +323,41 @@ export default function ReportDetail() {
                             </Badge>
                           )}
                           <p className="text-sm text-gray-600">{issue.description}</p>
-                          {issue.median_cost && (
-                            <div className="mt-2 text-sm">
-                              <span className="text-gray-500">Est. Cost: </span>
-                              <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                          <div className="grid grid-cols-2 gap-2 mt-3">
+                            {issue.median_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Est. Cost: </span>
+                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.estimated_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Repair Cost: </span>
+                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.average_mileage && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Avg. Mileage: </span>
+                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
+                              </div>
+                            )}
+                            {issue.confidence_score && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Confidence: </span>
+                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
+                              </div>
+                            )}
+                          </div>
+                          {issue.complaint_title && (
+                            <div className="mt-3 p-2 bg-gray-100 rounded text-sm italic">
+                              <span className="font-medium">Related complaint: </span>
+                              {issue.complaint_title}
+                            </div>
+                          )}
+                          {issue.estimated_cost_low && issue.estimated_cost_high && (
+                            <div className="mt-2 text-xs text-gray-500">
+                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
                             </div>
                           )}
                         </div>
@@ -321,10 +389,41 @@ export default function ReportDetail() {
                             </Badge>
                           )}
                           <p className="text-sm text-gray-600">{issue.description}</p>
-                          {issue.median_cost && (
-                            <div className="mt-2 text-sm">
-                              <span className="text-gray-500">Est. Cost: </span>
-                              <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                          <div className="grid grid-cols-2 gap-2 mt-3">
+                            {issue.median_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Est. Cost: </span>
+                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.estimated_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Repair Cost: </span>
+                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.average_mileage && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Avg. Mileage: </span>
+                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
+                              </div>
+                            )}
+                            {issue.confidence_score && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Confidence: </span>
+                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
+                              </div>
+                            )}
+                          </div>
+                          {issue.complaint_title && (
+                            <div className="mt-3 p-2 bg-orange-100 rounded text-sm italic">
+                              <span className="font-medium">Related complaint: </span>
+                              {issue.complaint_title}
+                            </div>
+                          )}
+                          {issue.estimated_cost_low && issue.estimated_cost_high && (
+                            <div className="mt-2 text-xs text-gray-500">
+                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
                             </div>
                           )}
                         </div>
@@ -356,10 +455,41 @@ export default function ReportDetail() {
                             </Badge>
                           )}
                           <p className="text-sm text-gray-600">{issue.description}</p>
-                          {issue.median_cost && (
-                            <div className="mt-2 text-sm">
-                              <span className="text-gray-500">Est. Cost: </span>
-                              <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                          <div className="grid grid-cols-2 gap-2 mt-3">
+                            {issue.median_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Est. Cost: </span>
+                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.estimated_cost && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Repair Cost: </span>
+                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {issue.average_mileage && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Avg. Mileage: </span>
+                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
+                              </div>
+                            )}
+                            {issue.confidence_score && (
+                              <div className="text-sm">
+                                <span className="text-gray-500">Confidence: </span>
+                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
+                              </div>
+                            )}
+                          </div>
+                          {issue.complaint_title && (
+                            <div className="mt-3 p-2 bg-red-100 rounded text-sm italic">
+                              <span className="font-medium">Related complaint: </span>
+                              {issue.complaint_title}
+                            </div>
+                          )}
+                          {issue.estimated_cost_low && issue.estimated_cost_high && (
+                            <div className="mt-2 text-xs text-gray-500">
+                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
                             </div>
                           )}
                         </div>
