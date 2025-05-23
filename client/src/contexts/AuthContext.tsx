@@ -38,24 +38,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Initialize session ID on load with 24 hour expiration
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const storedSessionId = localStorage.getItem("sessionId");
-    const sessionExpiry = localStorage.getItem("sessionExpiry");
     
-    const isSessionExpired = sessionExpiry && parseInt(sessionExpiry) < Date.now();
-    
+    // Always get a fresh session ID from the API on page load for anonymous users
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-    } else if (!storedSessionId || isSessionExpired) {
-      // Create a new session if we don't have a user or session ID or if the session is expired
+    } else {
+      // For anonymous users, always get a new session from the API
       setIsLoading(true);
       
-      // Get a new session from the LemonLens API
+      // Get a session from the LemonLens API
       apiRequest("GET", "/session")
         .then(async (response) => {
           const data = await response.json();
           
-          // The API returns the session_id in this format
-          // Get the exact session_id from the API response
+          // Get the exact UUID session_id from the API response
           const newSessionId = data.session_id;
           
           // Set session ID with 24 hour expiration
@@ -69,8 +65,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .catch(error => {
           console.error("Error creating session:", error);
           // If we can't get a session ID from the API, we'll need to try again later
-          // Not creating a fallback local ID as we need a valid one from the server
-          setIsLoading(false);
           toast({
             title: "Session Error",
             description: "Could not create a session. Some features may be limited.",
@@ -80,8 +74,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .finally(() => {
           setIsLoading(false);
         });
-    } else {
-      setSessionId(storedSessionId);
     }
   }, []);
 
