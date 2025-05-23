@@ -55,6 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const data = await response.json();
           
           // The API returns the session_id in this format
+          // Get the exact session_id from the API response
           const newSessionId = data.session_id;
           
           // Set session ID with 24 hour expiration
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           localStorage.setItem("sessionExpiry", expiryTime.toString());
           setSessionId(newSessionId);
           
-          console.log("New session ID assigned:", newSessionId);
+          console.log("New session ID assigned from API:", newSessionId);
         })
         .catch(error => {
           console.error("Error creating session:", error);
@@ -218,14 +219,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     apiRequest("GET", "/session")
       .then(async (response) => {
         const data = await response.json();
-        // The API returns the session_id in this format
+        // Get the exact session_id from the API response
         const newSessionId = data.session_id;
         // Set session ID with 24 hour expiration
         const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
         localStorage.setItem("sessionId", newSessionId);
         localStorage.setItem("sessionExpiry", expiryTime.toString());
         setSessionId(newSessionId);
-        console.log("New session ID assigned on logout:", newSessionId);
+        console.log("New session ID assigned on logout from API:", newSessionId);
       })
       .catch(error => {
         console.error("Error creating session:", error);

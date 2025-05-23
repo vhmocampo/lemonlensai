@@ -50,10 +50,14 @@ export function useReports() {
         payload.vin = input.vin;
       }
       
-      // Add session_id if user is not logged in
+      // Add session_id if user is not logged in - ensure we're using the exact format from the API
       if (!localStorage.getItem("user") && sessionId) {
+        // The API requires the exact session_id in UUID format
         payload.session_id = sessionId;
         console.log("Creating report with session_id:", sessionId);
+        
+        // For debugging purposes - log the entire payload to ensure it's correct
+        console.log("Full report payload:", JSON.stringify(payload));
       }
       
       // Include session_id directly in the request body as specified in the API docs
