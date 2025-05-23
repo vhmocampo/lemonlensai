@@ -29,7 +29,7 @@ export function useReports() {
       ? `/reports?session_id=${sessionId}`
       : "/reports";
       
-  const { data: reportsResponse, isLoading, refetch } = useQuery<{reports: Report[]}>({
+  const { data: reportsResponse, isLoading, refetch } = useQuery<Report[] | {reports: Report[]}>({
     queryKey: ["/reports", user?.id || sessionId],
     queryFn: async () => {
       const response = await apiRequest("GET", reportUrl);
@@ -38,16 +38,32 @@ export function useReports() {
     enabled: !!user || !!sessionId,
   });
   
-  // Extract reports from the response - handle both formats
-  // The API might return an array directly or an object with a reports property
+  // Extract reports from the response - handle API format
+  // The API returns an array of report objects with different field names
   const reports = Array.isArray(reportsResponse) 
-    ? reportsResponse 
+    ? reportsResponse.map(report => ({
+        // Map API response fields to our schema
+        id: 0, // Placeholder ID
+        uuid: report.uuid,
+        make: report.make,
+        model: report.model,
+        year: report.year,
+        mileage: report.mileage,
+        status: report.status,
+        createdAt: report.created_at || null,
+        updatedAt: report.updated_at || null,
+        // Fields that might not be in the API response
+        userId: null,
+        sessionId: null,
+        vin: null,
+        result: report.result || {}
+      }))
     : reportsResponse?.reports || [];
 
   const createMutation = useMutation({
     mutationFn: async (input: CreateReportInput) => {
-      // Get the session_id from localStorage for anonymous users
-      const sessionId = localStorage.getItem("sessionId");
+      // Use the session ID from the context hook
+      // No need to access localStorage directly
       
       // Create request payload
       const payload: any = {
@@ -84,7 +100,10 @@ export function useReports() {
   const retryMutation = useMutation({
     mutationFn: async (reportId: string | number) => {
       // The report ID could be a UUID string from the API
-      const response = await apiRequest("POST", `/reports/${reportId}/retry`);
+      const response = await apiRequest("POST", `/reports/${reportId}/retry`, {
+        // Include session_id for anonymous users
+        ...(sessionId && !localStorage.getItem("user") ? { session_id: sessionId } : {})
+      });
       return response.json();
     },
     onSuccess: () => {

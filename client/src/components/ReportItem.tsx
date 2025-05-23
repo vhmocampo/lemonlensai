@@ -18,8 +18,8 @@ export default function ReportItem({ report }: ReportItemProps) {
 
   const handleRetry = async () => {
     try {
-      // Convert ID to string in case it's a UUID string from the API
-      const reportId = typeof report.id === 'string' ? report.id : report.id;
+      // Use uuid field if it exists (from API), otherwise use id (from local DB)
+      const reportId = report.uuid || report.id;
       await retryReport(reportId);
       toast({
         title: "Processing Restarted",

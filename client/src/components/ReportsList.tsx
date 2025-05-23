@@ -38,7 +38,10 @@ export default function ReportsList({ onCreateReport }: ReportsListProps) {
         // Reports list
         <div className="space-y-6">
           {reports.map((report) => (
-            <ReportItem key={report.id} report={report} />
+            <ReportItem 
+              key={report.uuid || report.id} 
+              report={report} 
+            />
           ))}
         </div>
       )}

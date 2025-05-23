@@ -65,6 +65,7 @@ export type InsertVehicleYear = typeof vehicleYears.$inferInsert;
 // Reports table
 export const reports = pgTable("reports", {
   id: serial("id").primaryKey(),
+  uuid: text("uuid"),  // UUID from the API
   userId: text("user_id"),
   sessionId: text("session_id"),
   make: text("make").notNull(),
@@ -72,7 +73,7 @@ export const reports = pgTable("reports", {
   year: text("year").notNull(),
   mileage: integer("mileage").notNull(),
   vin: text("vin"),
-  status: text("status").notNull().default("processing"),
+  status: text("status").notNull().default("pending"),
   result: jsonb("result"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
