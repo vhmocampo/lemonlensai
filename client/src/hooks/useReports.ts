@@ -34,13 +34,18 @@ export function useReports() {
 
   const createMutation = useMutation({
     mutationFn: async (input: CreateReportInput) => {
-      // LemonLens API will use the auth token or session_id from our request setup
+      // Get the session_id from localStorage for anonymous users
+      const sessionId = localStorage.getItem("sessionId");
+      
+      // Include session_id directly in the request body as specified in the API docs
       const response = await apiRequest("POST", "/reports", {
         make: input.make,
         model: input.model,
-        year: input.year,
+        year: parseInt(input.year), // Convert to integer as required by API
         mileage: input.mileage,
         vin: input.vin || undefined,
+        // Only include session_id for anonymous users
+        ...(sessionId && !localStorage.getItem("user") ? { session_id: sessionId } : {})
       });
       return response.json();
     },

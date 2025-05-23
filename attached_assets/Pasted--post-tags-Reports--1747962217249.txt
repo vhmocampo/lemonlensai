@@ -1,0 +1,79 @@
+"post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Create a new vehicle report",
+                "description": "Store a new report request and dispatch generation job",
+                "operationId": "81442b4f5223939611d8ea603c3bd5f7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "make",
+                                    "model",
+                                    "year",
+                                    "mileage"
+                                ],
+                                "properties": {
+                                    "make": {
+                                        "type": "string",
+                                        "example": "Honda"
+                                    },
+                                    "model": {
+                                        "type": "string",
+                                        "example": "Accord"
+                                    },
+                                    "year": {
+                                        "type": "integer",
+                                        "example": 2020
+                                    },
+                                    "mileage": {
+                                        "type": "integer",
+                                        "example": 45000
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Report generation queued",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report generation has been queued"
+                                        },
+                                        "uuid": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
