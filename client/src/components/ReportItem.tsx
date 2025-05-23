@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Report } from "@shared/schema";
 import { formatDistanceToNow } from "date-fns";
-import { ChevronDown, Clock, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { ChevronDown, Clock, AlertCircle, CheckCircle, RefreshCw, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useReports } from "@/hooks/useReports";
@@ -86,6 +86,20 @@ export default function ReportItem({ report }: ReportItemProps) {
         </div>
         <div className="flex items-center space-x-3">
           {getStatusBadge()}
+          <div className="flex items-center space-x-2 mr-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.location.href = `/report/${report.uuid || report.id}`;
+              }}
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              View
+            </Button>
+          </div>
           <ChevronDown 
             className={`h-5 w-5 text-gray-500 transition-transform ${open ? 'transform rotate-180' : ''}`} 
           />
