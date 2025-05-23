@@ -27,7 +27,7 @@ export async function apiRequest(
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "X-API-KEY": import.meta.env.VITE_VEHICLE_API_KEY || "",
+    "X-API-Key": import.meta.env.VITE_VEHICLE_API_KEY || "",
     ...customHeaders
   };
   
@@ -98,7 +98,7 @@ export const getQueryFn: <T>(options: {
     }
     
     // Always include API key for LemonLens API
-    headers["X-API-KEY"] = import.meta.env.VITE_VEHICLE_API_KEY || "";
+    headers["X-API-Key"] = import.meta.env.VITE_VEHICLE_API_KEY || "";
     
     const res = await fetch(url, {
       headers
