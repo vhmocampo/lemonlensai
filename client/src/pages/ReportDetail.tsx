@@ -30,15 +30,21 @@ export default function ReportDetail() {
   const { user, sessionId } = useAuth();
   const [pollingInterval, setPollingInterval] = useState<number>(5000); // 5 seconds default
 
-  // Fetch report with polling
+  // Fetch report directly from API with polling
   const { data: report, isLoading } = useQuery({
     queryKey: ["/reports", reportId],
     queryFn: async () => {
-      const response = await apiRequest("GET", `/reports/${reportId}`);
-      const data = await response.json();
-      return data;
+      try {
+        // Include session ID in query param for anonymous users
+        const sessionParam = !localStorage.getItem("user") && sessionId ? `?session_id=${sessionId}` : '';
+        const response = await apiRequest("GET", `/reports/${reportId}${sessionParam}`);
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching report:", error);
+        return null;
+      }
     },
-    refetchInterval: report?.status === "complete" ? undefined : pollingInterval,
+    refetchInterval: pollingInterval,
     refetchIntervalInBackground: true,
     enabled: !!reportId,
   });
@@ -202,7 +208,7 @@ export default function ReportDetail() {
                 {report.make} {report.model} {report.year}
               </CardDescription>
             </div>
-            <Badge variant="success" className="bg-green-100 text-green-800 hover:bg-green-200">
+            <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-200">
               Complete
             </Badge>
           </div>
