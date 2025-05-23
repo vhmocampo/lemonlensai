@@ -203,11 +203,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await loadScript();
       
       // Initialize Google OAuth client
-      // Log the client ID for debugging
-      console.log("Using Google Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+      // Use the provided Google Client ID directly in the code
+      // In production, this should come from an environment variable
+      const googleClientId = "255128454310-d08l2fcs6irdudgb0gi9v1o1h3nl9f0o.apps.googleusercontent.com";
+      console.log("Using Google Client ID:", googleClientId);
       
       const client = (window as any).google.accounts.oauth2.initTokenClient({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || "",
+        client_id: googleClientId,
         scope: 'email profile',
         callback: async (tokenResponse: any) => {
           if (tokenResponse.access_token) {
