@@ -7,21 +7,23 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import axios from "axios";
 
-// Simulating API client with axios
+// Configure the API client with axios
 const apiClient = axios.create({
-  baseURL: process.env.VEHICLE_API_URL || "https://api.example.com",
+  baseURL: "https://lemonlensapp.com/api/v1",
   headers: {
-    Authorization: `Bearer ${process.env.VEHICLE_API_KEY || "test_key"}`,
+    Authorization: `Bearer ${process.env.VEHICLE_API_KEY}`,
     "Content-Type": "application/json",
+    "Accept": "application/json"
   },
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session management
-  app.post("/api/session", async (req, res) => {
+  app.get("/api/session", async (req, res) => {
     try {
-      const sessionId = req.body.sessionId || nanoid();
-      res.json({ sessionId });
+      // Get a new session ID from the LemonLens API
+      const response = await apiClient.get("/session");
+      res.json({ sessionId: response.data.session_id });
     } catch (error) {
       console.error("Error creating session:", error);
       res.status(500).json({ message: "Failed to create session" });
@@ -31,33 +33,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, email, password, sessionId } = req.body;
-      const existingUser = await storage.getUserByEmail(email);
+      const { username, email, password, password_confirmation, sessionId } = req.body;
       
-      if (existingUser) {
-        return res.status(409).json({ message: "Email already in use" });
-      }
-
-      const user = await storage.createUser({
-        id: nanoid(),
-        username,
+      // Call the LemonLens API to register the user
+      const apiResponse = await apiClient.post("/auth/register", {
+        name: username, // API expects 'name' instead of 'username'
         email,
-        password, // In a real app, would hash this
-        sessionId,
+        password,
+        password_confirmation
       });
-
-      // Migrate reports from session to user
+      
+      const { user, token } = apiResponse.data;
+      
+      // Migrate reports from session to user if a session exists
       if (sessionId) {
-        await storage.migrateSessionReports(sessionId, user.id);
+        try {
+          // We'll implement report migration with the real API
+          await apiClient.post("/reports/migrate", {
+            session_id: sessionId
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+        } catch (migrationError) {
+          console.error("Error migrating reports:", migrationError);
+          // Continue anyway, user registration still succeeded
+        }
       }
 
       res.status(201).json({ 
         id: user.id,
-        username: user.username,
-        email: user.email 
+        username: user.name, // API returns 'name' instead of 'username'
+        email: user.email,
+        token
       });
     } catch (error) {
       console.error("Registration error:", error);
+      
+      // Handle specific API error responses
+      if (error.response && error.response.status === 422) {
+        return res.status(422).json(error.response.data);
+      }
+      
       res.status(500).json({ message: "Registration failed" });
     }
   });
@@ -65,33 +83,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password, sessionId } = req.body;
-      const user = await storage.getUserByEmail(email);
       
-      if (!user || user.password !== password) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
+      // Call the LemonLens API to login the user
+      const apiResponse = await apiClient.post("/auth/login", {
+        email,
+        password
+      });
+      
+      const { user, token } = apiResponse.data;
+      
       // Migrate reports from session to user if needed
       if (sessionId) {
-        await storage.migrateSessionReports(sessionId, user.id);
+        try {
+          // We'll implement report migration with the real API
+          await apiClient.post("/reports/migrate", {
+            session_id: sessionId
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+        } catch (migrationError) {
+          console.error("Error migrating reports:", migrationError);
+          // Continue anyway, user login still succeeded
+        }
       }
 
       res.json({ 
         id: user.id,
-        username: user.username,
-        email: user.email 
+        username: user.name, // API returns 'name' instead of 'username'
+        email: user.email,
+        token
       });
     } catch (error) {
       console.error("Login error:", error);
+      
+      // Handle specific API error responses
+      if (error.response && error.response.status === 401) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      if (error.response && error.response.status === 422) {
+        return res.status(422).json(error.response.data);
+      }
+      
       res.status(500).json({ message: "Login failed" });
+    }
+  });
+  
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      // Get token from request headers
+      const token = req.headers.authorization?.split(' ')[1];
+      
+      if (!token) {
+        return res.status(401).json({ message: "No authentication token provided" });
+      }
+      
+      // Call the LemonLens API to logout the user
+      await apiClient.post("/auth/logout", {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      res.json({ message: "Successfully logged out" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      
+      // Handle 401 separately
+      if (error.response && error.response.status === 401) {
+        return res.status(401).json({ message: "Unauthenticated" });
+      }
+      
+      res.status(500).json({ message: "Logout failed" });
     }
   });
 
   // Vehicle data endpoints
   app.get("/api/vehicles/makes", async (req, res) => {
     try {
-      const makes = await storage.getVehicleMakes();
-      res.json(makes);
+      // Fetch vehicle makes from the LemonLens API
+      const response = await apiClient.get("/vehicles/makes");
+      res.json(response.data);
     } catch (error) {
       console.error("Error fetching vehicle makes:", error);
       res.status(500).json({ message: "Failed to fetch vehicle makes" });
@@ -101,8 +175,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/vehicles/models/:makeId", async (req, res) => {
     try {
       const makeId = parseInt(req.params.makeId);
-      const models = await storage.getVehicleModelsByMake(makeId);
-      res.json(models);
+      // Fetch vehicle models from the LemonLens API
+      const response = await apiClient.get(`/vehicles/models/${makeId}`);
+      res.json(response.data);
     } catch (error) {
       console.error("Error fetching vehicle models:", error);
       res.status(500).json({ message: "Failed to fetch vehicle models" });
@@ -112,8 +187,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/vehicles/years/:modelId", async (req, res) => {
     try {
       const modelId = parseInt(req.params.modelId);
-      const years = await storage.getVehicleYearsByModel(modelId);
-      res.json(years);
+      // Fetch vehicle years from the LemonLens API
+      const response = await apiClient.get(`/vehicles/years/${modelId}`);
+      res.json(response.data);
     } catch (error) {
       console.error("Error fetching vehicle years:", error);
       res.status(500).json({ message: "Failed to fetch vehicle years" });
@@ -125,57 +201,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const reportData = createReportSchema.parse(req.body);
       
-      // Create the report
-      const report = await storage.createReport(reportData);
+      // Prepare data for the LemonLens API (convert to snake_case as needed)
+      const apiRequestData = {
+        make: reportData.make,
+        model: reportData.model,
+        year: reportData.year,
+        mileage: reportData.mileage,
+        vin: reportData.vin || null,
+        session_id: reportData.sessionId || null
+      };
       
-      // In a real implementation, we would call the vehicle API here to queue report generation
-      // For now, simulate this with a simple response
+      // Add authorization header if user is authenticated
+      let headers = {};
+      if (reportData.userId && req.headers.authorization) {
+        headers = {
+          Authorization: req.headers.authorization
+        };
+      }
       
-      res.status(201).json(report);
+      // Send request to create a report at the LemonLens API
+      const response = await apiClient.post("/reports", apiRequestData, { headers });
       
-      // Simulate background processing (in real app, this would be a separate process)
-      setTimeout(async () => {
-        try {
-          // Update report status to completed with mock data
-          await storage.updateReportStatus(report.id, "completed", {
-            overallHealth: 85,
-            reliabilityScore: 4.2,
-            commonIssues: [
-              { name: "Transmission", frequency: 12, severity: "medium" },
-              { name: "Electric System", frequency: 8, severity: "low" },
-              { name: "Brakes", frequency: 5, severity: "low" }
-            ],
-            findings: [
-              {
-                title: "Transmission Issues",
-                description: "Reports indicate some concerns with transmission shifting between 45,000-60,000 miles. Recommended preventative maintenance includes transmission fluid change every 30,000 miles.",
-                risk: "medium",
-                action: "Inspect Soon"
-              },
-              {
-                title: "Electrical System",
-                description: "Minor reports of battery life issues in cold weather conditions. Consider having battery tested if vehicle is operated in temperatures below freezing.",
-                risk: "low",
-                action: "Monitor"
-              }
-            ],
-            maintenance: [
-              { item: "Transmission fluid change", interval: "Every 30,000 miles" },
-              { item: "Battery inspection", interval: "Before winter season" },
-              { item: "Brake fluid flush", interval: "Every 2 years" }
-            ]
-          });
-        } catch (error) {
-          console.error("Error updating report:", error);
-        }
-      }, 5000);
-
-    } catch (error) {
+      // Return the created report
+      res.status(201).json(response.data);
+    } catch (error: any) {
       console.error("Error creating report:", error);
+      
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
         return res.status(400).json({ message: validationError.message });
       }
+      
+      // Pass through API error responses if available
+      if (error.response && error.response.data) {
+        return res.status(error.response.status || 500).json(error.response.data);
+      }
+      
       res.status(500).json({ message: "Failed to create report" });
     }
   });
@@ -189,10 +250,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "userId or sessionId required" });
       }
       
-      const reports = await storage.getReports(userId, sessionId);
-      res.json(reports);
-    } catch (error) {
+      // Prepare headers and query parameters for the API request
+      let headers = {};
+      let queryParams = '';
+      
+      if (userId && req.headers.authorization) {
+        // If user is authenticated, include the auth token
+        headers = {
+          Authorization: req.headers.authorization
+        };
+      } else if (sessionId) {
+        // If using a session, include the session_id as a query parameter
+        queryParams = `?session_id=${sessionId}`;
+      }
+      
+      // Make the request to the LemonLens API
+      const response = await apiClient.get(`/reports${queryParams}`, { headers });
+      res.json(response.data);
+    } catch (error: any) {
       console.error("Error fetching reports:", error);
+      
+      // Pass through API error responses if available
+      if (error.response && error.response.data) {
+        return res.status(error.response.status || 500).json(error.response.data);
+      }
+      
       res.status(500).json({ message: "Failed to fetch reports" });
     }
   });
@@ -200,15 +282,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/reports/:id", async (req, res) => {
     try {
       const reportId = parseInt(req.params.id);
-      const report = await storage.getReport(reportId);
       
-      if (!report) {
+      // Get session ID or auth token
+      let headers = {};
+      let queryParams = '';
+      
+      const sessionId = req.query.sessionId as string;
+      
+      if (req.headers.authorization) {
+        headers = {
+          Authorization: req.headers.authorization
+        };
+      } else if (sessionId) {
+        queryParams = `?session_id=${sessionId}`;
+      }
+      
+      // Make the request to the LemonLens API
+      const response = await apiClient.get(`/reports/${reportId}${queryParams}`, { headers });
+      
+      res.json(response.data);
+    } catch (error: any) {
+      console.error("Error fetching report:", error);
+      
+      // If the report wasn't found
+      if (error.response && error.response.status === 404) {
         return res.status(404).json({ message: "Report not found" });
       }
       
-      res.json(report);
-    } catch (error) {
-      console.error("Error fetching report:", error);
+      // Pass through other API error responses if available
+      if (error.response && error.response.data) {
+        return res.status(error.response.status || 500).json(error.response.data);
+      }
+      
       res.status(500).json({ message: "Failed to fetch report" });
     }
   });
@@ -216,58 +321,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/reports/:id/retry", async (req, res) => {
     try {
       const reportId = parseInt(req.params.id);
-      const report = await storage.getReport(reportId);
       
-      if (!report) {
+      // Get session ID or auth token
+      let headers = {};
+      let queryParams = '';
+      
+      const sessionId = req.query.sessionId as string;
+      
+      if (req.headers.authorization) {
+        headers = {
+          Authorization: req.headers.authorization
+        };
+      } else if (sessionId) {
+        // Pass the session ID in the body of the request
+        queryParams = `?session_id=${sessionId}`;
+      }
+      
+      // Call the LemonLens API to retry the report
+      const response = await apiClient.post(`/reports/${reportId}/retry${queryParams}`, {}, { headers });
+      
+      res.json(response.data);
+    } catch (error: any) {
+      console.error("Error retrying report:", error);
+      
+      // If the report wasn't found
+      if (error.response && error.response.status === 404) {
         return res.status(404).json({ message: "Report not found" });
       }
       
-      // Update status to processing
-      await storage.updateReportStatus(reportId, "processing");
+      // Pass through other API error responses if available
+      if (error.response && error.response.data) {
+        return res.status(error.response.status || 500).json(error.response.data);
+      }
       
-      res.json({ message: "Report processing restarted" });
-      
-      // Simulate background processing
-      setTimeout(async () => {
-        try {
-          // Update report status to completed
-          await storage.updateReportStatus(reportId, "completed", {
-            overallHealth: 85,
-            reliabilityScore: 4.2,
-            commonIssues: [
-              { name: "Transmission", frequency: 12, severity: "medium" },
-              { name: "Electric System", frequency: 8, severity: "low" },
-              { name: "Brakes", frequency: 5, severity: "low" }
-            ],
-            findings: [
-              {
-                title: "Transmission Issues",
-                description: "Reports indicate some concerns with transmission shifting between 45,000-60,000 miles. Recommended preventative maintenance includes transmission fluid change every 30,000 miles.",
-                risk: "medium",
-                action: "Inspect Soon"
-              },
-              {
-                title: "Electrical System",
-                description: "Minor reports of battery life issues in cold weather conditions. Consider having battery tested if vehicle is operated in temperatures below freezing.",
-                risk: "low",
-                action: "Monitor"
-              }
-            ],
-            maintenance: [
-              { item: "Transmission fluid change", interval: "Every 30,000 miles" },
-              { item: "Battery inspection", interval: "Before winter season" },
-              { item: "Brake fluid flush", interval: "Every 2 years" }
-            ]
-          });
-        } catch (error) {
-          console.error("Error updating report:", error);
-          // If processing fails, update status to failed
-          await storage.updateReportStatus(reportId, "failed");
-        }
-      }, 3000);
-      
-    } catch (error) {
-      console.error("Error retrying report:", error);
       res.status(500).json({ message: "Failed to retry report" });
     }
   });
