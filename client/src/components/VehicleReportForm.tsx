@@ -1,0 +1,255 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useVehicleData } from "@/hooks/useVehicleData";
+import { useReports } from "@/hooks/useReports";
+import { useToast } from "@/hooks/use-toast";
+
+interface VehicleReportFormProps {
+  onReportCreated: () => void;
+}
+
+const formSchema = z.object({
+  make: z.string().min(1, "Make is required"),
+  model: z.string().min(1, "Model is required"),
+  year: z.string().min(1, "Year is required"),
+  mileage: z.string().refine(
+    val => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 1000000,
+    { message: "Mileage must be a number between 1 and 1,000,000" }
+  ),
+  vin: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export default function VehicleReportForm({ onReportCreated }: VehicleReportFormProps) {
+  const { 
+    makes, 
+    models, 
+    years, 
+    isLoadingMakes,
+    isLoadingModels,
+    isLoadingYears,
+    fetchModels, 
+    fetchYears 
+  } = useVehicleData();
+  
+  const { createReport, isCreating } = useReports();
+  const { toast } = useToast();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      make: "",
+      model: "",
+      year: "",
+      mileage: "",
+      vin: "",
+    },
+  });
+
+  const handleMakeChange = (value: string) => {
+    form.setValue("make", value);
+    form.setValue("model", "");
+    form.setValue("year", "");
+    
+    // Find the make object to get its ID
+    const selectedMake = makes.find(make => make.name === value);
+    if (selectedMake) {
+      fetchModels(selectedMake.id);
+    }
+  };
+
+  const handleModelChange = (value: string) => {
+    form.setValue("model", value);
+    form.setValue("year", "");
+    
+    // Find the model object to get its ID
+    const selectedModel = models.find(model => model.name === value);
+    if (selectedModel) {
+      fetchYears(selectedModel.id);
+    }
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      await createReport({
+        make: data.make,
+        model: data.model,
+        year: data.year,
+        mileage: parseInt(data.mileage),
+        vin: data.vin || undefined,
+      });
+      
+      toast({
+        title: "Report Created",
+        description: "Your vehicle health report is being generated.",
+      });
+      
+      form.reset();
+      onReportCreated();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Generate Vehicle Health Report</h2>
+      <p className="mb-6 text-gray-600">Enter your vehicle details to generate a comprehensive health report based on real-world complaint data.</p>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <FormField
+              control={form.control}
+              name="make"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Make</FormLabel>
+                  <Select
+                    disabled={isLoadingMakes}
+                    onValueChange={handleMakeChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Make" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {makes.map((make) => (
+                        <SelectItem key={make.id} value={make.name}>
+                          {make.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="model"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Model</FormLabel>
+                  <Select
+                    disabled={isLoadingModels || !form.watch("make")}
+                    onValueChange={handleModelChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Model" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {models.map((model) => (
+                        <SelectItem key={model.id} value={model.name}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="year"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Year</FormLabel>
+                  <Select
+                    disabled={isLoadingYears || !form.watch("model")}
+                    onValueChange={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Year" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {years.map((year) => (
+                        <SelectItem key={year.id} value={year.year.toString()}>
+                          {year.year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mileage"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-3">
+                  <FormLabel>Current Mileage</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      placeholder="e.g. 45000" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="vin"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-3">
+                  <FormLabel>VIN (Optional)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Enter VIN for more accurate results" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button 
+            type="submit" 
+            className="w-full py-3 px-4 text-base font-medium text-gray-900 bg-lemon-500 hover:bg-lemon-600"
+            disabled={isCreating}
+          >
+            {isCreating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Generate Report"
+            )}
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
+}
