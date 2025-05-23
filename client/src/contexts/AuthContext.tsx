@@ -8,6 +8,7 @@ interface User {
   id: string;
   username: string;
   email: string;
+  token?: string;
 }
 
 interface AuthContextType {
@@ -43,14 +44,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(JSON.parse(storedUser));
     } else if (!storedSessionId) {
       // Create a new session if we don't have a user or session ID
-      const newSessionId = nanoid();
-      localStorage.setItem("sessionId", newSessionId);
-      setSessionId(newSessionId);
+      setIsLoading(true);
       
-      // Register the session with the server
-      apiRequest("POST", "/api/session", { sessionId: newSessionId })
+      // Get a new session from the LemonLens API
+      apiRequest("GET", "session")
+        .then(async (response) => {
+          const data = await response.json();
+          const newSessionId = data.session_id;
+          localStorage.setItem("sessionId", newSessionId);
+          setSessionId(newSessionId);
+        })
         .catch(error => {
           console.error("Error creating session:", error);
+          // Fallback to a local session ID if API fails
+          const localSessionId = nanoid();
+          localStorage.setItem("sessionId", localSessionId);
+          setSessionId(localSessionId);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     } else {
       setSessionId(storedSessionId);
@@ -60,13 +72,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest("POST", "/api/auth/login", {
+      const response = await apiRequest("POST", "auth/login", {
         email,
-        password,
-        sessionId,
+        password
       });
       
-      const userData = await response.json();
+      const data = await response.json();
+      
+      // Create a user object with the response data
+      const userData = {
+        id: data.user.id,
+        username: data.user.name,
+        email: data.user.email,
+        token: data.token
+      };
+      
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       
@@ -75,7 +95,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem("sessionId");
       
       // Invalidate reports cache to fetch user reports
-      queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports"] });
       
       toast({
         title: "Login Successful",
@@ -96,14 +116,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (username: string, email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest("POST", "/api/auth/register", {
-        username,
+      const response = await apiRequest("POST", "auth/register", {
+        name: username, // API expects 'name' instead of 'username'
         email,
         password,
-        sessionId,
+        password_confirmation: password
       });
       
-      const userData = await response.json();
+      const data = await response.json();
+      
+      // Create a user object with the response data
+      const userData = {
+        id: data.user.id,
+        username: data.user.name,
+        email: data.user.email,
+        token: data.token
+      };
+      
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       
@@ -112,7 +141,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem("sessionId");
       
       // Invalidate reports cache to fetch user reports
-      queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports"] });
       
       toast({
         title: "Registration Successful",
@@ -156,22 +185,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = () => {
+    // If we have a user with a token, call the logout endpoint
+    if (user?.token) {
+      apiRequest("POST", "auth/logout", {}, { 
+        "Authorization": `Bearer ${user.token}`
+      })
+      .catch(error => {
+        console.error("Error logging out:", error);
+      });
+    }
+    
+    // Clear user from state and localStorage
     setUser(null);
     localStorage.removeItem("user");
     
-    // Generate a new session ID for anonymous usage
-    const newSessionId = nanoid();
-    setSessionId(newSessionId);
-    localStorage.setItem("sessionId", newSessionId);
-    
-    // Register the new session with the server
-    apiRequest("POST", "/api/session", { sessionId: newSessionId })
+    // Create a new session by calling the API
+    apiRequest("GET", "session")
+      .then(async (response) => {
+        const data = await response.json();
+        const newSessionId = data.session_id;
+        localStorage.setItem("sessionId", newSessionId);
+        setSessionId(newSessionId);
+      })
       .catch(error => {
         console.error("Error creating session:", error);
+        // Fallback to a local session ID if API fails
+        const localSessionId = nanoid();
+        localStorage.setItem("sessionId", localSessionId);
+        setSessionId(localSessionId);
       });
     
     // Invalidate reports cache
-    queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+    queryClient.invalidateQueries({ queryKey: ["/reports"] });
     
     toast({
       title: "Logged Out",
