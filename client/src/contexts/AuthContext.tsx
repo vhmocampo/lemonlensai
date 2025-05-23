@@ -15,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   sessionId: string | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -254,6 +255,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     sessionId,
     isLoading,
+    isAuthenticated: !!user,
     login,
     register,
     loginWithGoogle,
