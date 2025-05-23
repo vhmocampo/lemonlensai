@@ -44,6 +44,19 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        // Custom lemon colors for LemonLens.ai
+        lemon: {
+          "50": "hsl(var(--lemon-50))",
+          "100": "hsl(var(--lemon-100))",
+          "200": "hsl(var(--lemon-200))",
+          "300": "hsl(var(--lemon-300))",
+          "400": "hsl(var(--lemon-400))",
+          "500": "hsl(var(--lemon-500))",
+          "600": "hsl(var(--lemon-600))",
+          "700": "hsl(var(--lemon-700))",
+          "800": "hsl(var(--lemon-800))",
+          "900": "hsl(var(--lemon-900))",
+        },
         chart: {
           "1": "hsl(var(--chart-1))",
           "2": "hsl(var(--chart-2))",
