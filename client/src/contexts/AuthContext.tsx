@@ -188,20 +188,90 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const loginWithGoogle = async () => {
     try {
       setIsLoading(true);
-      // In a real implementation, this would redirect to Google OAuth
-      toast({
-        title: "Google Login Not Implemented",
-        description: "This feature would be implemented with a real OAuth service.",
+      
+      // Load the Google Identity library
+      const loadScript = () => {
+        return new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://accounts.google.com/gsi/client';
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load Google Identity library'));
+          document.head.appendChild(script);
+        });
+      };
+      
+      await loadScript();
+      
+      // Initialize Google OAuth client
+      const client = (window as any).google.accounts.oauth2.initTokenClient({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        scope: 'email profile',
+        callback: async (tokenResponse: any) => {
+          if (tokenResponse.access_token) {
+            try {
+              // Send the token directly to the LemonLens API with VEHICLE_API_KEY
+              const response = await fetch("https://lemonlensapp.com/api/v1/auth/google", {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'Authorization': `Bearer ${import.meta.env.VITE_VEHICLE_API_KEY}`
+                },
+                body: JSON.stringify({
+                  access_token: tokenResponse.access_token,
+                  session_id: sessionId || null
+                })
+              });
+              
+              const data = await response.json();
+              
+              // Create a user object with the response data
+              const userData = {
+                id: data.user.id,
+                username: data.user.name,
+                email: data.user.email,
+                token: data.token
+              };
+              
+              setUser(userData);
+              localStorage.setItem("user", JSON.stringify(userData));
+              
+              // Clear session ID as we now have a user
+              setSessionId(null);
+              localStorage.removeItem("sessionId");
+              
+              // Invalidate reports cache to fetch user reports
+              queryClient.invalidateQueries({ queryKey: ["/reports"] });
+              
+              toast({
+                title: "Login Successful",
+                description: "You've successfully logged in with Google!",
+              });
+            } catch (error) {
+              console.error("Error authenticating with backend:", error);
+              toast({
+                title: "Login Failed",
+                description: "Error authenticating with server. Please try again.",
+                variant: "destructive",
+              });
+            }
+          }
+          setIsLoading(false);
+        },
       });
+      
+      // Request an access token
+      client.requestAccessToken();
+      
     } catch (error) {
+      console.error("Google login error:", error);
       toast({
         title: "Login Failed",
         description: "Unable to login with Google. Please try again.",
         variant: "destructive",
       });
-      throw error;
-    } finally {
       setIsLoading(false);
+      throw error;
     }
   };
 

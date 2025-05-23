@@ -131,6 +131,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  app.post("/api/auth/google", async (req, res) => {
+    try {
+      const { access_token, sessionId } = req.body;
+      
+      if (!access_token) {
+        return res.status(400).json({ message: "No Google access token provided" });
+      }
+      
+      // Call the LemonLens API to authenticate with Google
+      const apiResponse = await apiClient.post("/auth/google", {
+        access_token
+      });
+      
+      const { user, token } = apiResponse.data;
+      
+      // Migrate reports from session to user if needed
+      if (sessionId) {
+        try {
+          await apiClient.post("/reports/migrate", {
+            session_id: sessionId
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+        } catch (migrationError) {
+          console.error("Error migrating reports:", migrationError);
+          // Continue anyway, user login still succeeded
+        }
+      }
+
+      res.json({ 
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email
+        }, 
+        token 
+      });
+    } catch (error: any) {
+      console.error("Google authentication error:", error);
+      
+      // Handle specific API error responses
+      if (error.response && error.response.status === 401) {
+        return res.status(401).json({ message: "Invalid Google token" });
+      }
+      
+      if (error.response && error.response.data) {
+        return res.status(error.response.status || 500).json(error.response.data);
+      }
+      
+      res.status(500).json({ message: "Google authentication failed" });
+    }
+  });
+
   app.post("/api/auth/logout", async (req, res) => {
     try {
       // Get token from request headers
