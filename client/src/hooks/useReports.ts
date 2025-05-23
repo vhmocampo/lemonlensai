@@ -23,41 +23,38 @@ export function useReports() {
       : null;
 
   const { data: reports = [], isLoading, refetch } = useQuery<Report[]>({
-    queryKey: ["/api/reports", queryParams],
-    queryFn: async () => {
-      if (!queryParams) return [];
-      
-      // Construct the URL with query parameters
-      const params = new URLSearchParams();
-      if (queryParams.userId) params.append('userId', queryParams.userId);
-      if (queryParams.sessionId) params.append('sessionId', queryParams.sessionId);
-      const response = await apiRequest("GET", `/api/reports?${params.toString()}`);
-      return response.json();
-    },
-    enabled: !!queryParams,
+    queryKey: ["/reports"],
+    // No need for a custom queryFn as our updated queryClient already handles
+    // adding the auth token or session ID to the request
+    enabled: !!user || !!sessionId,
   });
 
   const createMutation = useMutation({
     mutationFn: async (input: CreateReportInput) => {
-      const response = await apiRequest("POST", "/api/reports", {
-        ...input,
-        userId: user?.id,
-        sessionId: !user ? sessionId : null,
+      // LemonLens API will use the auth token or session_id from our request setup
+      const response = await apiRequest("POST", "/reports", {
+        make: input.make,
+        model: input.model,
+        year: input.year,
+        mileage: input.mileage,
+        vin: input.vin || undefined,
       });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports"] });
     },
   });
 
   const retryMutation = useMutation({
     mutationFn: async (reportId: number) => {
-      const response = await apiRequest("POST", `/api/reports/${reportId}/retry`);
+      // No need to add query parameters as the auth token or session_id 
+      // is automatically included in our request setup
+      const response = await apiRequest("POST", `/reports/${reportId}/retry`);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+      queryClient.invalidateQueries({ queryKey: ["/reports"] });
     },
   });
 

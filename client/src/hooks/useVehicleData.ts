@@ -11,14 +11,14 @@ export function useVehicleData() {
     data: makes = [], 
     isLoading: isLoadingMakes 
   } = useQuery<VehicleMake[]>({
-    queryKey: ["/api/vehicles/makes"],
+    queryKey: ["/vehicles/makes"],
   });
 
   const { 
     data: models = [],
     isLoading: isLoadingModels
   } = useQuery<VehicleModel[]>({
-    queryKey: ["/api/vehicles/models", selectedMakeId],
+    queryKey: ["/vehicles/models", { make_id: selectedMakeId }],
     enabled: !!selectedMakeId,
   });
 
@@ -26,7 +26,7 @@ export function useVehicleData() {
     data: years = [],
     isLoading: isLoadingYears
   } = useQuery<VehicleYear[]>({
-    queryKey: ["/api/vehicles/years", selectedModelId],
+    queryKey: ["/vehicles/years", { model_id: selectedModelId }],
     enabled: !!selectedModelId,
   });
 
