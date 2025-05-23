@@ -49,16 +49,19 @@ export default function ReportDetail() {
     enabled: !!reportId,
   });
 
-  // Update polling intervals based on status
+  // Update polling intervals based on completion status
   useEffect(() => {
-    if (report?.status === "complete") {
+    if (report?.completed_at) {
       setPollingInterval(0); // Stop polling when complete
-    } else if (report?.status === "processing") {
+      console.log("Report is complete, completed at:", report.completed_at);
+    } else if (report?.created_at && !report?.completed_at) {
       setPollingInterval(2000); // Poll faster while processing
+      console.log("Report is processing");
     } else {
       setPollingInterval(5000); // Default polling interval
+      console.log("Report status unknown, using default polling");
     }
-  }, [report?.status]);
+  }, [report?.completed_at, report?.created_at]);
 
   // Format date helper
   const formatDate = (dateString: string) => {
@@ -98,7 +101,7 @@ export default function ReportDetail() {
   }
 
   // Processing state
-  if (report.status !== "complete") {
+  if (!report.completed_at) {
     return (
       <div className="container max-w-4xl mx-auto p-6">
         <Button 
@@ -119,8 +122,8 @@ export default function ReportDetail() {
                   {report.make} {report.model} {report.year}
                 </CardDescription>
               </div>
-              <Badge variant={report.status === "processing" ? "outline" : "secondary"}>
-                {report.status === "processing" ? "Processing" : "Pending"}
+              <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+                Processing
               </Badge>
             </div>
           </CardHeader>
@@ -209,7 +212,7 @@ export default function ReportDetail() {
               </CardDescription>
             </div>
             <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-200">
-              Complete
+              {report.completed_at ? "Complete" : "Processing"}
             </Badge>
           </div>
         </CardHeader>
@@ -369,7 +372,7 @@ export default function ReportDetail() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between text-xs text-gray-500">
-          <div>Updated: {formatDate(report.updated_at)}</div>
+          <div>Updated: {formatDate(report.completed_at || report.created_at)}</div>
           <div>Report ID: {report.uuid || reportId}</div>
         </CardFooter>
       </Card>

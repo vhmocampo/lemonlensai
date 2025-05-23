@@ -1,0 +1,154 @@
+{
+    "uuid": "537d5519-d652-4c32-8846-c3b164dc320d",
+    "make": "Toyota",
+    "model": "4Runner",
+    "year": "2014",
+    "mileage": 100000,
+    "result": {
+        "score": 45,
+        "repair_buckets": {
+            "low": [
+                {
+                    "title": "Door Lock Actuator Replacement",
+                    "category": "unknown or other",
+                    "description": "A door lock actuator is an electric mechanism that locks or unlocks a vehicle's doors. When it fails, doors may not lock or unlock properly. Replacement involves removing the door panel to access and replace the faulty actuator, ensuring your vehicle's doors operate securely and as intended.",
+                    "median_cost": 462.5,
+                    "average_score": 0.9441742300987244,
+                    "estimated_cost": 462.5,
+                    "average_mileage": 120000,
+                    "complaint_title": "\"Door locks malfunction, trapping people; motor problem affects multiple doors.\"",
+                    "confidence_score": 0.9441742300987244,
+                    "estimated_cost_low": 398,
+                    "estimated_cost_high": 527
+                },
+                {
+                    "title": "Wheel Bearing Replacement",
+                    "category": "wheels_hubs",
+                    "description": "Wheel bearing replacement involves removing the wheel, taking off the brake components, and replacing the old bearing with a new one. It's needed when bearings wear out, causing noise or vibration. Regular inspection prevents breakdowns, ensuring smooth, safe rides.",
+                    "median_cost": 1008,
+                    "average_score": 0.8699327905972799,
+                    "estimated_cost": 623.5,
+                    "average_mileage": 78000,
+                    "complaint_title": "NHTSA \u2014 Wheels Problems",
+                    "confidence_score": 0.9312558770179749,
+                    "estimated_cost_low": 461,
+                    "estimated_cost_high": 786
+                },
+                {
+                    "title": "Wheel Hub Assembly Replacement",
+                    "category": "wheels_hubs",
+                    "description": "The wheel hub assembly connects the wheel to the car, housing bearings that allow it to rotate smoothly. Replacement might be needed due to worn bearings causing noise or wheel play. It involves removing the wheel, brake components, and old hub, then installing a new assembly for safe, stable driving.",
+                    "median_cost": 1008,
+                    "average_score": 0.8699327905972799,
+                    "estimated_cost": 1008,
+                    "average_mileage": 78000,
+                    "complaint_title": "NHTSA \u2014 Wheels Problems",
+                    "confidence_score": 0.9317716360092164,
+                    "estimated_cost_low": 659,
+                    "estimated_cost_high": 1357
+                }
+            ],
+            "high": [
+                {
+                    "title": "Air Bag Control Module Replacement",
+                    "category": "air bags",
+                    "description": "The Air Bag Control Module is the car's computer that controls airbag deployment. Replacement involves removing the old module and installing a new one. It's needed if the module is damaged or fails, ensuring airbags deploy properly in a crash. Always have a professional handle this critical safety component.",
+                    "median_cost": 636,
+                    "average_score": 0.8695390224456787,
+                    "estimated_cost": 636,
+                    "average_mileage": 84000,
+                    "complaint_title": "\"Airbag deploys, injures front passenger with puncture wounds and lacerations.\"",
+                    "confidence_score": 0.8695390224456787,
+                    "estimated_cost_low": 605,
+                    "estimated_cost_high": 667
+                },
+                {
+                    "title": "Transmission Fluid Change",
+                    "category": "drivetrain",
+                    "description": "A transmission fluid change involves replacing the old fluid in your car's transmission system with new fluid. This is crucial for lubricating the transmission's moving parts, cooling the system, and ensuring smooth gear shifts. Typically needed every 30,000 to 60,000 miles, it prevents transmission wear and performance issues.",
+                    "median_cost": 138.5,
+                    "average_score": 0.7707364559173584,
+                    "estimated_cost": 138.5,
+                    "average_mileage": 96837,
+                    "complaint_title": "NHTSA \u2014 Power Train Problems",
+                    "confidence_score": 0.7707364559173584,
+                    "estimated_cost_low": 121,
+                    "estimated_cost_high": 156
+                },
+                {
+                    "title": "Brake Bleed",
+                    "category": "service brakes",
+                    "description": "A brake bleed involves removing trapped air from the brake lines, ensuring your brakes respond effectively. Needed when air enters the system, typically after brake work or a leak. It restores brake pedal firmness, improving vehicle safety.",
+                    "median_cost": 1443.5,
+                    "average_score": 0.7303246061007181,
+                    "estimated_cost": 186.5,
+                    "average_mileage": 84000,
+                    "complaint_title": "\"Brakes are spongy, engine ticks loudly, making it unreliable and potentially dangerous.\"",
+                    "confidence_score": 0.8014586567878723,
+                    "estimated_cost_low": 151,
+                    "estimated_cost_high": 222
+                }
+            ],
+            "medium": [
+                {
+                    "title": "Door Lock Actuator Replacement",
+                    "category": "electrical system",
+                    "description": "A door lock actuator is an electric mechanism that locks or unlocks a vehicle's doors. When it fails, doors may not lock or unlock properly. Replacement involves removing the door panel to access and replace the faulty actuator, ensuring your vehicle's doors operate securely and as intended.",
+                    "median_cost": 462.5,
+                    "average_score": 0.9404122829437256,
+                    "estimated_cost": 462.5,
+                    "average_mileage": 84000,
+                    "complaint_title": "\"Door lock actuator fails on all doors; repaired, but now out of warranty.\"",
+                    "confidence_score": 0.9404122829437256,
+                    "estimated_cost_low": 398,
+                    "estimated_cost_high": 527
+                },
+                {
+                    "title": "Fuel Pump Replacement",
+                    "category": "electrical",
+                    "description": "A fuel pump replacement involves removing the old pump from the fuel tank and installing a new one. It's needed when the pump fails, causing engine start issues or poor performance. This repair ensures fuel efficiently reaches the engine, critical for vehicle operation.",
+                    "median_cost": 1564.5,
+                    "average_score": 0.8116983771324158,
+                    "estimated_cost": 1564.5,
+                    "average_mileage": 122000,
+                    "complaint_title": "Truck Dies And Check Engine Light Comes On",
+                    "confidence_score": 0.8116983771324158,
+                    "estimated_cost_low": 1428,
+                    "estimated_cost_high": 1701
+                },
+                {
+                    "title": "Headlamp Switch Replacement",
+                    "category": "lights",
+                    "description": "Headlamp switch replacement involves substituting the car's faulty light control switch with a new one. This repair is needed if headlights or interior lights malfunction due to a faulty switch. It ensures proper lighting operation, crucial for safe driving at night or in low visibility conditions.",
+                    "median_cost": 201.5,
+                    "average_score": 0.7493233680725098,
+                    "estimated_cost": 201.5,
+                    "average_mileage": 76000,
+                    "complaint_title": "NHTSA \u2014 Exterior Lighting Problems",
+                    "confidence_score": 0.7493233680725098,
+                    "estimated_cost_low": 177,
+                    "estimated_cost_high": 226
+                }
+            ],
+            "title_counts": {
+                "Horn Replacement": 5,
+                "Fuel Pump Replacement": 6,
+                "Door Lock Actuator Replacement": 6
+            },
+            "category_counts": [],
+            "priority_counts": []
+        },
+        "category_counts": {
+            "air bags": 5,
+            "steering": 6,
+            "unknown or other": 10
+        },
+        "priority_counts": {
+            "low": 24,
+            "high": 17,
+            "medium": 12
+        }
+    },
+    "created_at": "2025-05-22T22:02:21.000000Z",
+    "completed_at": "2025-05-22T22:02:21.000000Z"
+}
