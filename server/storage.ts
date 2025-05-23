@@ -73,7 +73,11 @@ export class MemStorage implements IStorage {
 
   async createUser(user: InsertUser & { id: string }): Promise<User> {
     const newUser: User = {
-      ...user,
+      id: user.id,
+      username: user.username,
+      email: user.email || null,
+      password: user.password || null,
+      sessionId: user.sessionId || null,
       createdAt: new Date(),
     };
     this.users.set(user.id, newUser);
@@ -97,11 +101,18 @@ export class MemStorage implements IStorage {
   async createReport(report: InsertReport): Promise<Report> {
     const id = this.nextReportId++;
     const newReport: Report = {
-      ...report,
       id,
+      make: report.make,
+      model: report.model,
+      year: report.year,
+      mileage: report.mileage,
+      vin: report.vin || null,
+      userId: report.userId || null,
+      sessionId: report.sessionId || null,
       status: "processing",
+      result: null,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
     this.reports.set(id, newReport);
     return newReport;
@@ -116,11 +127,18 @@ export class MemStorage implements IStorage {
       return [];
     }
     
-    return Array.from(this.reports.values()).filter(report => {
-      if (userId && report.userId === userId) return true;
-      if (sessionId && report.sessionId === sessionId) return true;
-      return false;
-    }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return Array.from(this.reports.values())
+      .filter(report => {
+        if (userId && report.userId === userId) return true;
+        if (sessionId && report.sessionId === sessionId) return true;
+        return false;
+      })
+      .sort((a, b) => {
+        // Handle potential null dates (though our implementation never has null dates)
+        const dateA = a.createdAt ? a.createdAt.getTime() : 0;
+        const dateB = b.createdAt ? b.createdAt.getTime() : 0;
+        return dateB - dateA; // Sort descending (newest first)
+      });
   }
   
   async updateReportStatus(id: number, status: string, result?: any): Promise<Report> {

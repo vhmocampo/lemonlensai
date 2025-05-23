@@ -17,14 +17,24 @@ export function useReports() {
   
   // Determine the query parameters based on whether the user is logged in
   const queryParams = user 
-    ? `?userId=${user.id}` 
+    ? { userId: user.id } 
     : sessionId 
-      ? `?sessionId=${sessionId}` 
-      : "";
+      ? { sessionId: sessionId }
+      : null;
 
   const { data: reports = [], isLoading, refetch } = useQuery<Report[]>({
     queryKey: ["/api/reports", queryParams],
-    enabled: !!user || !!sessionId,
+    queryFn: async () => {
+      if (!queryParams) return [];
+      
+      // Construct the URL with query parameters
+      const params = new URLSearchParams();
+      if (queryParams.userId) params.append('userId', queryParams.userId);
+      if (queryParams.sessionId) params.append('sessionId', queryParams.sessionId);
+      const response = await apiRequest("GET", `/api/reports?${params.toString()}`);
+      return response.json();
+    },
+    enabled: !!queryParams,
   });
 
   const createMutation = useMutation({
