@@ -181,8 +181,11 @@ export default function ReportDetail() {
   const reliabilityScore = result.score || 0;
   const repairBuckets = result.repair_buckets || {};
   const commonIssues = repairBuckets.low || [];
-  const moderateIssues = repairBuckets.moderate || [];
-  const severeIssues = repairBuckets.severe || [];
+  const moderateIssues = repairBuckets.medium || [];
+  const severeIssues = repairBuckets.high || [];
+  
+  // For debugging - display all available data
+  console.log("All repair buckets:", repairBuckets);
 
   // Helper for score color
   const getScoreColor = (score: number) => {
@@ -302,17 +305,40 @@ export default function ReportDetail() {
           
           {/* Issue Sections */}
           <div className="space-y-6">
+            {/* Show all available buckets */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-yellow-50 p-4 rounded-lg text-center">
+                <div className="text-sm font-medium text-yellow-800">Low Priority</div>
+                <div className="text-2xl font-bold">{commonIssues.length}</div>
+                <div className="text-xs text-gray-500 mt-1">Common repairs</div>
+              </div>
+              <div className="bg-orange-50 p-4 rounded-lg text-center">
+                <div className="text-sm font-medium text-orange-800">Medium Priority</div>
+                <div className="text-2xl font-bold">{moderateIssues.length}</div>
+                <div className="text-xs text-gray-500 mt-1">Maintenance issues</div>
+              </div>
+              <div className="bg-red-50 p-4 rounded-lg text-center">
+                <div className="text-sm font-medium text-red-800">High Priority</div>
+                <div className="text-2xl font-bold">{severeIssues.length}</div>
+                <div className="text-xs text-gray-500 mt-1">Critical issues</div>
+              </div>
+            </div>
+          
             {/* Low Priority Issues */}
-            {commonIssues && commonIssues.length > 0 && (
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="low-issues">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center">
-                      <span className="text-yellow-500 mr-2">⚠️</span>
-                      <h3 className="text-lg font-medium">Common Issues ({commonIssues.length})</h3>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="low-issues">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center">
+                    <span className="text-yellow-500 mr-2">⚠️</span>
+                    <h3 className="text-lg font-medium">Low Priority Issues ({commonIssues.length})</h3>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {commonIssues.length === 0 ? (
+                    <div className="bg-gray-50 p-4 rounded-lg text-center">
+                      <p className="text-gray-500">No low priority issues found for this vehicle.</p>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
+                  ) : (
                     <div className="space-y-4">
                       {commonIssues.map((issue: any, index: number) => (
                         <div key={index} className="bg-gray-50 p-4 rounded-lg">
@@ -363,22 +389,26 @@ export default function ReportDetail() {
                         </div>
                       ))}
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            )}
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
             
-            {/* Moderate Issues */}
-            {moderateIssues && moderateIssues.length > 0 && (
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="moderate-issues">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center">
-                      <span className="text-orange-500 mr-2">🔶</span>
-                      <h3 className="text-lg font-medium">Moderate Issues ({moderateIssues.length})</h3>
+            {/* Medium Priority Issues */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="medium-issues">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center">
+                    <span className="text-orange-500 mr-2">🔶</span>
+                    <h3 className="text-lg font-medium">Medium Priority Issues ({moderateIssues.length})</h3>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {moderateIssues.length === 0 ? (
+                    <div className="bg-orange-50 p-4 rounded-lg text-center">
+                      <p className="text-gray-500">No medium priority issues found for this vehicle.</p>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
+                  ) : (
                     <div className="space-y-4">
                       {moderateIssues.map((issue: any, index: number) => (
                         <div key={index} className="bg-orange-50 p-4 rounded-lg">
@@ -429,22 +459,26 @@ export default function ReportDetail() {
                         </div>
                       ))}
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            )}
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
             
-            {/* Severe Issues */}
-            {severeIssues && severeIssues.length > 0 && (
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="severe-issues">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center">
-                      <span className="text-red-500 mr-2">🔴</span>
-                      <h3 className="text-lg font-medium">Critical Issues ({severeIssues.length})</h3>
+            {/* High Priority Issues */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="high-issues">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center">
+                    <span className="text-red-500 mr-2">🔴</span>
+                    <h3 className="text-lg font-medium">High Priority Issues ({severeIssues.length})</h3>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {severeIssues.length === 0 ? (
+                    <div className="bg-red-50 p-4 rounded-lg text-center">
+                      <p className="text-gray-500">No high priority issues found for this vehicle.</p>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
+                  ) : (
                     <div className="space-y-4">
                       {severeIssues.map((issue: any, index: number) => (
                         <div key={index} className="bg-red-50 p-4 rounded-lg">
@@ -495,10 +529,10 @@ export default function ReportDetail() {
                         </div>
                       ))}
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            )}
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between text-xs text-gray-500">
