@@ -75,6 +75,9 @@ export const reports = pgTable("reports", {
   vin: text("vin"),
   status: text("status").notNull().default("pending"),
   result: jsonb("result"),
+  completed_at: timestamp("completed_at"),
+  created_at: timestamp("created_at"),
+  updated_at: timestamp("updated_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
