@@ -116,7 +116,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (username: string, email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest("POST", "auth/register", {
+      const response = await apiRequest("POST", "/auth/register", {
         name: username, // API expects 'name' instead of 'username'
         email,
         password,
@@ -187,7 +187,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = () => {
     // If we have a user with a token, call the logout endpoint
     if (user?.token) {
-      apiRequest("POST", "auth/logout", {}, { 
+      apiRequest("POST", "/auth/logout", {}, { 
         "Authorization": `Bearer ${user.token}`
       })
       .catch(error => {
@@ -200,7 +200,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem("user");
     
     // Create a new session by calling the API
-    apiRequest("GET", "session")
+    apiRequest("GET", "/session")
       .then(async (response) => {
         const data = await response.json();
         const newSessionId = data.session_id;

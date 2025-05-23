@@ -11,7 +11,7 @@ export function useVehicleData() {
     data: makesResponse, 
     isLoading: isLoadingMakes 
   } = useQuery<{makes: string[]}>({
-    queryKey: ["/vehicles/makes"],
+    queryKey: ["/vehicle/makes"],
   });
   
   // Transform the makes array into the format our app expects
@@ -24,7 +24,7 @@ export function useVehicleData() {
     data: modelsResponse,
     isLoading: isLoadingModels
   } = useQuery<{models: string[]}>({
-    queryKey: ["/vehicles/models", { make: makes.find(m => m.id === selectedMakeId)?.name }],
+    queryKey: ["/vehicle/models", { make: makes.find(m => m.id === selectedMakeId)?.name }],
     enabled: !!selectedMakeId && makes.length > 0,
   });
   
@@ -39,7 +39,7 @@ export function useVehicleData() {
     data: yearsResponse,
     isLoading: isLoadingYears
   } = useQuery<{years: string[]}>({
-    queryKey: ["/vehicles/years", { model: models.find(m => m.id === selectedModelId)?.name }],
+    queryKey: ["/vehicle/years", { model: models.find(m => m.id === selectedModelId)?.name }],
     enabled: !!selectedModelId && models.length > 0,
   });
   
