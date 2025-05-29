@@ -242,8 +242,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/vehicles/years/:modelId", async (req, res) => {
     try {
       const modelId = parseInt(req.params.modelId);
-      // Fetch vehicle years from the LemonLens API
-      const response = await apiClient.get(`/vehicles/years/${modelId}`);
+      const make = req.query.make as string;
+      
+      if (!make) {
+        return res.status(400).json({ message: "Make parameter is required" });
+      }
+      
+      // Fetch vehicle years from the LemonLens API with make parameter
+      const response = await apiClient.get(`/vehicles/years/${modelId}?make=${encodeURIComponent(make)}`);
       res.json(response.data);
     } catch (error) {
       console.error("Error fetching vehicle years:", error);

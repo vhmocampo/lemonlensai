@@ -39,8 +39,11 @@ export function useVehicleData() {
     data: yearsResponse,
     isLoading: isLoadingYears
   } = useQuery<{years: string[]}>({
-    queryKey: ["/vehicle/years", { model: models.find(m => m.id === selectedModelId)?.name }],
-    enabled: !!selectedModelId && models.length > 0,
+    queryKey: ["/vehicle/years", { 
+      model: models.find(m => m.id === selectedModelId)?.name,
+      make: makes.find(m => m.id === selectedMakeId)?.name 
+    }],
+    enabled: !!selectedModelId && models.length > 0 && !!selectedMakeId && makes.length > 0,
   });
   
   // Transform the years array into the format our app expects - but keep year as string
