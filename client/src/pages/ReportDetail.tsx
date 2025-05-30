@@ -319,7 +319,7 @@ export default function ReportDetail() {
                   Report Coverage
                 </p>
                 <p className="text-blue-700">
-                  Keep in mind that the repairs listed are over a broad set of complaints and user reports, and are only possible repairs. Consider upgrading to a premium report to get specific information on a car you are considering, as cars with regular maintenance and oil changes fail less often!
+                  Repairs listed are estimated on broad general complaints and may not apply to every car. For specific details, consider a premium report.
                 </p>
               </div>
             </div>
