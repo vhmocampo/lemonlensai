@@ -283,7 +283,7 @@ export default function ReportDetail() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <DollarSign className="mr-2 h-5 w-5" />
-                Estimated Repair Costs
+                Possible Lifetime Repair Cost
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -302,7 +302,7 @@ export default function ReportDetail() {
                   </span>
                 </div>
                 <div className="text-sm text-gray-500 mt-3 text-center">
-                  Based on up to 5 most likely complaints
+                  Based on highest reported repairs. <br /> Upgrade for zip code specific estimates.
                 </div>
               </div>
             </CardContent>
@@ -319,10 +319,7 @@ export default function ReportDetail() {
                   Report Coverage
                 </p>
                 <p className="text-blue-700">
-                  We've analyzed repairs for 15,000 miles before your submitted
-                  mileage ({(report.mileage - 15000).toLocaleString()} -{" "}
-                  {report.mileage.toLocaleString()} mi) and up to 2 years of
-                  future usage based on typical driving patterns.
+                  Keep in mind that the repairs listed are over a broad set of complaints and user reports, and are only possible repairs. Consider upgrading to a premium report to get specific information on a car you are considering, as cars with regular maintenance and oil changes fail less often!
                 </p>
               </div>
             </div>
@@ -435,10 +432,10 @@ export default function ReportDetail() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="text-xl">
-                Known Complaints & Issues
+                Possible Lifetime Repairs
               </CardTitle>
               <CardDescription>
-                Top reported issues for your vehicle with cost estimates
+                These are based on broad user reports, and could vary per car.
               </CardDescription>
             </CardHeader>
             <CardContent>
