@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, AlertTriangle, CheckCircle, ArrowLeft } from "lucide-react";
+import { Loader2, AlertTriangle, ArrowLeft, Info, CheckCircle, XCircle, Shield, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +22,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 
 export default function ReportDetail() {
@@ -76,6 +77,20 @@ export default function ReportDetail() {
   // Return to reports list
   const goBack = () => {
     setLocation("/");
+  };
+
+  // Helper for score color
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
+  };
+
+  // Helper for score background
+  const getScoreBg = (score: number) => {
+    if (score >= 80) return "bg-green-50 border-green-200";
+    if (score >= 60) return "bg-yellow-50 border-yellow-200";
+    return "bg-red-50 border-red-200";
   };
 
   // Loading state
@@ -177,369 +192,296 @@ export default function ReportDetail() {
   // Complete report display
   const result = report.result || {};
   
-  // Extract result data with defaults
-  const reliabilityScore = result.score || 0;
-  const repairBuckets = result.repair_buckets || {};
-  const commonIssues = repairBuckets.low || [];
-  const moderateIssues = repairBuckets.medium || [];
-  const severeIssues = repairBuckets.high || [];
-  
-  // For debugging - display all available data
-  console.log("All repair buckets:", repairBuckets);
-
-  // Helper for score color
-  const getScoreColor = (score: number) => {
-    if (score >= 75) return "text-green-500";
-    if (score >= 50) return "text-yellow-500";
-    return "text-red-500";
-  };
-
   return (
-    <div className="container max-w-4xl mx-auto p-6">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="mb-6" 
-        onClick={goBack}
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Reports
-      </Button>
-      
-      <Card className="mb-6">
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle className="text-2xl">Vehicle Report</CardTitle>
-              <CardDescription>
-                {report.make} {report.model} {report.year}
-              </CardDescription>
-            </div>
-            <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-200">
-              {report.completed_at ? "Complete" : "Processing"}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Vehicle Summary */}
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-500">Make</p>
-              <p className="font-medium">{report.make}</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Model</p>
-              <p className="font-medium">{report.model}</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Year</p>
-              <p className="font-medium">{report.year}</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Mileage</p>
-              <p className="font-medium">{report.mileage.toLocaleString()} mi</p>
-            </div>
-            {report.vin && (
-              <div className="col-span-2">
-                <p className="text-gray-500">VIN</p>
-                <p className="font-medium">{report.vin}</p>
+    <TooltipProvider>
+      <div className="container max-w-4xl mx-auto p-6">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="mb-6" 
+          onClick={goBack}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Reports
+        </Button>
+        
+        {/* Header Card with Vehicle Info */}
+        <Card className="mb-6">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-2xl">Vehicle Report</CardTitle>
+                <CardDescription>
+                  {report.make} {report.model} {report.year} • {report.mileage.toLocaleString()} mi
+                </CardDescription>
               </div>
-            )}
-          </div>
-          
-          <Separator />
-          
+              <Badge variant="outline" className="bg-green-100 text-green-800">
+                Complete
+              </Badge>
+            </div>
+          </CardHeader>
+        </Card>
+
+        {/* Recommendation Card - Prominent Display */}
+        {result.recommendation && (
+          <Card className="mb-6 border-2 border-blue-200">
+            <CardHeader>
+              <CardTitle className="text-xl text-blue-700 flex items-center">
+                <CheckCircle className="mr-2 h-5 w-5" />
+                Our Recommendation
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-800 mb-4">
+                {result.recommendation}
+              </div>
+              {result.summary && (
+                <p className="text-gray-700 leading-relaxed">
+                  {result.summary}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Score and Cost Overview */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* Reliability Score */}
-          <div className="flex flex-col items-center justify-center py-4">
-            <h3 className="text-lg font-medium mb-2">Reliability Score</h3>
-            <div className={`text-6xl font-bold ${getScoreColor(reliabilityScore)}`}>
-              {reliabilityScore}
+          <Card className={`border-2 ${getScoreBg(result.score || 0)}`}>
+            <CardHeader>
+              <CardTitle className="text-lg">Reliability Score</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <div className={`text-5xl font-bold ${getScoreColor(result.score || 0)} mb-2`}>
+                {result.score || 0}
+              </div>
+              <div className="text-sm text-gray-600">
+                out of 100
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Cost Estimates */}
+          <Card className="border-2 border-orange-200">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center">
+                <DollarSign className="mr-2 h-5 w-5" />
+                Estimated Repair Costs
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Low end:</span>
+                  <span className="font-bold text-green-600">
+                    ${result.cost_from ? result.cost_from.toLocaleString() : '0'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">High end:</span>
+                  <span className="font-bold text-red-600">
+                    ${result.cost_to ? result.cost_to.toLocaleString() : '0'}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-500 mt-3 text-center">
+                  Based on up to 5 most likely complaints
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Data Coverage Notice */}
+        <Card className="mb-6 bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="flex items-start">
+              <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-medium text-blue-800 mb-1">Report Coverage</p>
+                <p className="text-blue-700">
+                  We've analyzed repairs for 15,000 miles before your submitted mileage ({(report.mileage - 15000).toLocaleString()} - {report.mileage.toLocaleString()} mi) 
+                  and up to 2 years of future usage based on typical driving patterns.
+                </p>
+              </div>
             </div>
-            <p className="text-gray-500 text-sm mt-2">
-              {reliabilityScore >= 75 
-                ? "Excellent reliability with minimal issues expected" 
-                : reliabilityScore >= 50 
-                  ? "Average reliability with some maintenance required"
-                  : "Below average reliability, consider thorough inspection"
-              }
-            </p>
-          </div>
-          
-          {/* Category Distribution */}
-          {result.category_counts && Object.keys(result.category_counts).length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-medium mb-3">Issue Categories</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {Object.entries(result.category_counts).map(([category, count], index) => (
-                  <div key={index} className="bg-gray-50 p-2 rounded-md text-center">
-                    <div className="text-sm font-medium capitalize">{category.replace('_', ' ')}</div>
-                    <div className="text-lg font-bold">{count}</div>
+          </CardContent>
+        </Card>
+
+        {/* Complaints Section */}
+        {result.complaints && Object.keys(result.complaints).length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-xl">Known Complaints & Issues</CardTitle>
+              <CardDescription>
+                Top reported issues for your vehicle with cost estimates
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {Object.entries(result.complaints).map(([key, complaint]: [string, any]) => (
+                  <div key={key} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <h4 className="font-semibold text-lg">{complaint.normalized_title}</h4>
+                      <div className="text-right">
+                        <div className="text-sm text-gray-500">Cost at minimum</div>
+                        <div className="font-bold text-lg">
+                          ${complaint.average_cost ? complaint.average_cost.toLocaleString() : 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-700 mb-3">{complaint.description}</p>
+                    
+                    <div className="grid md:grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <span className="text-gray-500 text-sm">Mileage Range: </span>
+                        <span className="font-medium">
+                          {complaint.bucket_from ? complaint.bucket_from.toLocaleString() : '0'} - {complaint.bucket_to ? complaint.bucket_to.toLocaleString() : '0'} mi
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 text-sm">Frequency: </span>
+                        <span className="font-medium">{complaint.times_reported || 'Not specified'}</span>
+                      </div>
+                    </div>
+
+                    {complaint.complaint && (
+                      <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
+                        <span className="font-medium">User report: </span>
+                        "{complaint.complaint}"
+                      </div>
+                    )}
+
+                    {complaint.likelyhood !== undefined && (
+                      <div className="flex items-center">
+                        <span className="text-gray-500 text-sm mr-2">Likelihood: </span>
+                        {complaint.likelyhood === null ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Badge variant="outline" className="cursor-help">
+                                Premium Feature <Info className="ml-1 h-3 w-3" />
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Likelihood data is only visible on premium reports</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <span className="font-medium">{complaint.likelyhood}%</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-          
-          {/* Priority Distribution */}
-          {result.priority_counts && Object.keys(result.priority_counts).length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-medium mb-3">Issue Priority Distribution</h3>
-              <div className="flex space-x-4">
-                {Object.entries(result.priority_counts).map(([priority, count], index) => (
-                  <div key={index} 
-                    className={`flex-1 p-3 rounded-md text-center ${
-                      priority === 'low' 
-                        ? 'bg-yellow-50 text-yellow-800' 
-                        : priority === 'medium' 
-                          ? 'bg-orange-50 text-orange-800' 
-                          : 'bg-red-50 text-red-800'
-                    }`}>
-                    <div className="text-sm font-medium capitalize">{priority}</div>
-                    <div className="text-xl font-bold">{count}</div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Known Issues */}
+        {result.known_issues && result.known_issues.length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-xl">Known Issues</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {result.known_issues.map((issue: any, index: number) => (
+                  <div key={index} className={`p-3 rounded-lg border ${
+                    issue.priority === 1 
+                      ? 'bg-red-50 border-red-200' 
+                      : 'bg-gray-50 border-gray-200'
+                  }`}>
+                    <div className="flex items-start">
+                      {issue.priority === 1 ? (
+                        <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                      )}
+                      <div>
+                        {issue.priority === 1 && (
+                          <Badge variant="destructive" className="mb-2">Critical</Badge>
+                        )}
+                        <p className={issue.priority === 1 ? 'text-red-800' : 'text-gray-700'}>
+                          {issue.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-          
-          <Separator />
-          
-          {/* Issue Sections */}
-          <div className="space-y-6">
-            {/* Show all available buckets */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-yellow-50 p-4 rounded-lg text-center">
-                <div className="text-sm font-medium text-yellow-800">Low Priority</div>
-                <div className="text-2xl font-bold">{commonIssues.length}</div>
-                <div className="text-xs text-gray-500 mt-1">Common repairs</div>
-              </div>
-              <div className="bg-orange-50 p-4 rounded-lg text-center">
-                <div className="text-sm font-medium text-orange-800">Medium Priority</div>
-                <div className="text-2xl font-bold">{moderateIssues.length}</div>
-                <div className="text-xs text-gray-500 mt-1">Maintenance issues</div>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg text-center">
-                <div className="text-sm font-medium text-red-800">High Priority</div>
-                <div className="text-2xl font-bold">{severeIssues.length}</div>
-                <div className="text-xs text-gray-500 mt-1">Critical issues</div>
-              </div>
-            </div>
-          
-            {/* Low Priority Issues */}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="low-issues">
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex items-center">
-                    <span className="text-yellow-500 mr-2">⚠️</span>
-                    <h3 className="text-lg font-medium">Low Priority Issues ({commonIssues.length})</h3>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Recalls */}
+        {result.recalls && result.recalls.length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center">
+                <Shield className="mr-2 h-5 w-5" />
+                Likely Recalls
+              </CardTitle>
+              <CardDescription>
+                These are potential recalls, not confirmed recalls for your specific vehicle
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {result.recalls.map((recall: any, index: number) => (
+                  <div key={index} className={`p-3 rounded-lg border ${
+                    recall.priority === 1 
+                      ? 'bg-red-50 border-red-200' 
+                      : 'bg-yellow-50 border-yellow-200'
+                  }`}>
+                    <div className="flex items-start">
+                      {recall.priority === 1 ? (
+                        <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Shield className="h-5 w-5 text-yellow-600 mr-3 mt-0.5 flex-shrink-0" />
+                      )}
+                      <div>
+                        {recall.priority === 1 && (
+                          <Badge variant="destructive" className="mb-2">Critical</Badge>
+                        )}
+                        <p className={recall.priority === 1 ? 'text-red-800' : 'text-yellow-800'}>
+                          {recall.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {commonIssues.length === 0 ? (
-                    <div className="bg-gray-50 p-4 rounded-lg text-center">
-                      <p className="text-gray-500">No low priority issues found for this vehicle.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {commonIssues.map((issue: any, index: number) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-medium">{issue.title}</h4>
-                          {issue.category && (
-                            <Badge variant="outline" className="mt-1 mb-2">
-                              {issue.category}
-                            </Badge>
-                          )}
-                          <p className="text-sm text-gray-600">{issue.description}</p>
-                          <div className="grid grid-cols-2 gap-2 mt-3">
-                            {issue.median_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Est. Cost: </span>
-                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.estimated_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Repair Cost: </span>
-                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.average_mileage && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Avg. Mileage: </span>
-                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
-                              </div>
-                            )}
-                            {issue.confidence_score && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Confidence: </span>
-                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
-                              </div>
-                            )}
-                          </div>
-                          {issue.complaint_title && (
-                            <div className="mt-3 p-2 bg-gray-100 rounded text-sm italic">
-                              <span className="font-medium">Related complaint: </span>
-                              {issue.complaint_title}
-                            </div>
-                          )}
-                          {issue.estimated_cost_low && issue.estimated_cost_high && (
-                            <div className="mt-2 text-xs text-gray-500">
-                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            
-            {/* Medium Priority Issues */}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="medium-issues">
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex items-center">
-                    <span className="text-orange-500 mr-2">🔶</span>
-                    <h3 className="text-lg font-medium">Medium Priority Issues ({moderateIssues.length})</h3>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Suggestions - Pro Tips */}
+        {result.suggestions && result.suggestions.length > 0 && (
+          <Card className="mb-6 bg-green-50 border-green-200">
+            <CardHeader>
+              <CardTitle className="text-lg text-green-800">Pro Tips</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {result.suggestions.map((suggestion: any, index: number) => (
+                  <div key={index} className="flex items-start text-green-700">
+                    <CheckCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{suggestion.description}</span>
                   </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {moderateIssues.length === 0 ? (
-                    <div className="bg-orange-50 p-4 rounded-lg text-center">
-                      <p className="text-gray-500">No medium priority issues found for this vehicle.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {moderateIssues.map((issue: any, index: number) => (
-                        <div key={index} className="bg-orange-50 p-4 rounded-lg">
-                          <h4 className="font-medium">{issue.title}</h4>
-                          {issue.category && (
-                            <Badge variant="outline" className="mt-1 mb-2">
-                              {issue.category}
-                            </Badge>
-                          )}
-                          <p className="text-sm text-gray-600">{issue.description}</p>
-                          <div className="grid grid-cols-2 gap-2 mt-3">
-                            {issue.median_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Est. Cost: </span>
-                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.estimated_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Repair Cost: </span>
-                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.average_mileage && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Avg. Mileage: </span>
-                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
-                              </div>
-                            )}
-                            {issue.confidence_score && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Confidence: </span>
-                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
-                              </div>
-                            )}
-                          </div>
-                          {issue.complaint_title && (
-                            <div className="mt-3 p-2 bg-orange-100 rounded text-sm italic">
-                              <span className="font-medium">Related complaint: </span>
-                              {issue.complaint_title}
-                            </div>
-                          )}
-                          {issue.estimated_cost_low && issue.estimated_cost_high && (
-                            <div className="mt-2 text-xs text-gray-500">
-                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            
-            {/* High Priority Issues */}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="high-issues">
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex items-center">
-                    <span className="text-red-500 mr-2">🔴</span>
-                    <h3 className="text-lg font-medium">High Priority Issues ({severeIssues.length})</h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {severeIssues.length === 0 ? (
-                    <div className="bg-red-50 p-4 rounded-lg text-center">
-                      <p className="text-gray-500">No high priority issues found for this vehicle.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {severeIssues.map((issue: any, index: number) => (
-                        <div key={index} className="bg-red-50 p-4 rounded-lg">
-                          <h4 className="font-medium">{issue.title}</h4>
-                          {issue.category && (
-                            <Badge variant="outline" className="mt-1 mb-2">
-                              {issue.category}
-                            </Badge>
-                          )}
-                          <p className="text-sm text-gray-600">{issue.description}</p>
-                          <div className="grid grid-cols-2 gap-2 mt-3">
-                            {issue.median_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Est. Cost: </span>
-                                <span className="font-medium">${issue.median_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.estimated_cost && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Repair Cost: </span>
-                                <span className="font-medium">${issue.estimated_cost.toFixed(2)}</span>
-                              </div>
-                            )}
-                            {issue.average_mileage && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Avg. Mileage: </span>
-                                <span className="font-medium">{issue.average_mileage.toLocaleString()}</span>
-                              </div>
-                            )}
-                            {issue.confidence_score && (
-                              <div className="text-sm">
-                                <span className="text-gray-500">Confidence: </span>
-                                <span className="font-medium">{(issue.confidence_score * 100).toFixed(0)}%</span>
-                              </div>
-                            )}
-                          </div>
-                          {issue.complaint_title && (
-                            <div className="mt-3 p-2 bg-red-100 rounded text-sm italic">
-                              <span className="font-medium">Related complaint: </span>
-                              {issue.complaint_title}
-                            </div>
-                          )}
-                          {issue.estimated_cost_low && issue.estimated_cost_high && (
-                            <div className="mt-2 text-xs text-gray-500">
-                              Cost range: ${issue.estimated_cost_low.toFixed(2)} - ${issue.estimated_cost_high.toFixed(2)}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between text-xs text-gray-500">
-          <div>Updated: {formatDate(report.completed_at || report.created_at)}</div>
-          <div>Report ID: {report.uuid || reportId}</div>
-        </CardFooter>
-      </Card>
-    </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Report Footer */}
+        <Card>
+          <CardFooter className="flex justify-between text-xs text-gray-500 pt-6">
+            <div>Generated: {formatDate(report.completed_at)}</div>
+            <div>Report ID: {report.uuid || reportId}</div>
+          </CardFooter>
+        </Card>
+      </div>
+    </TooltipProvider>
   );
 }
