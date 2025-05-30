@@ -283,7 +283,7 @@ export default function ReportDetail() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <DollarSign className="mr-2 h-5 w-5" />
-                Possible Lifetime Repair Cost
+                Repair Cost Ranges
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -302,7 +302,8 @@ export default function ReportDetail() {
                   </span>
                 </div>
                 <div className="text-sm text-gray-500 mt-3 text-center">
-                  Based on highest reported repairs. <br /> Upgrade for zip code specific estimates.
+                  Based on highest reported repairs. <br /> Upgrade for zip code
+                  specific estimates.
                 </div>
               </div>
             </CardContent>
@@ -319,7 +320,9 @@ export default function ReportDetail() {
                   Report Coverage
                 </p>
                 <p className="text-blue-700">
-                  Repairs listed are estimated on broad general complaints and may not apply to every car. For specific details, consider a premium report.
+                  Repairs listed are estimated on broad general complaints and
+                  may not apply to every car. For specific details, consider a
+                  premium report.
                 </p>
               </div>
             </div>
@@ -432,7 +435,7 @@ export default function ReportDetail() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="text-xl">
-                Possible Lifetime Repairs
+                Possible Repairs Needed Over Time
               </CardTitle>
               <CardDescription>
                 These are based on broad user reports, and could vary per car.
