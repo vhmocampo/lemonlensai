@@ -3,7 +3,16 @@ import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, AlertTriangle, ArrowLeft, Info, CheckCircle, XCircle, Shield, DollarSign } from "lucide-react";
+import {
+  Loader2,
+  AlertTriangle,
+  ArrowLeft,
+  Info,
+  CheckCircle,
+  XCircle,
+  Shield,
+  DollarSign,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +31,12 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { format } from "date-fns";
 
 export default function ReportDetail() {
@@ -37,8 +51,14 @@ export default function ReportDetail() {
     queryFn: async () => {
       try {
         // Include session ID in query param for anonymous users
-        const sessionParam = !localStorage.getItem("user") && sessionId ? `?session_id=${sessionId}` : '';
-        const response = await apiRequest("GET", `/reports/${reportId}${sessionParam}`);
+        const sessionParam =
+          !localStorage.getItem("user") && sessionId
+            ? `?session_id=${sessionId}`
+            : "";
+        const response = await apiRequest(
+          "GET",
+          `/reports/${reportId}${sessionParam}`,
+        );
         return await response.json();
       } catch (error) {
         console.error("Error fetching report:", error);
@@ -109,7 +129,9 @@ export default function ReportDetail() {
       <div className="container max-w-4xl mx-auto p-6 flex flex-col items-center justify-center min-h-[60vh]">
         <AlertTriangle className="h-10 w-10 text-red-500 mb-4" />
         <h3 className="text-xl font-medium">Report not found</h3>
-        <p className="text-gray-500 mb-6">The report you're looking for doesn't exist or is no longer available.</p>
+        <p className="text-gray-500 mb-6">
+          The report you're looking for doesn't exist or is no longer available.
+        </p>
         <Button onClick={goBack}>Return to Dashboard</Button>
       </div>
     );
@@ -119,15 +141,10 @@ export default function ReportDetail() {
   if (!report.completed_at) {
     return (
       <div className="container max-w-4xl mx-auto p-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="mb-6" 
-          onClick={goBack}
-        >
+        <Button variant="ghost" size="sm" className="mb-6" onClick={goBack}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Reports
         </Button>
-        
+
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -137,7 +154,10 @@ export default function ReportDetail() {
                   {report.make} {report.model} {report.year}
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+              <Badge
+                variant="outline"
+                className="bg-yellow-100 text-yellow-800"
+              >
                 Processing
               </Badge>
             </div>
@@ -154,7 +174,7 @@ export default function ReportDetail() {
                 className="w-full max-w-md mx-auto mt-4"
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-gray-500">Make</p>
@@ -170,7 +190,9 @@ export default function ReportDetail() {
               </div>
               <div>
                 <p className="text-gray-500">Mileage</p>
-                <p className="font-medium">{report.mileage.toLocaleString()} mi</p>
+                <p className="font-medium">
+                  {report.mileage.toLocaleString()} mi
+                </p>
               </div>
               {report.vin && (
                 <div className="col-span-2">
@@ -191,19 +213,14 @@ export default function ReportDetail() {
 
   // Complete report display
   const result = report.result || {};
-  
+
   return (
     <TooltipProvider>
       <div className="container max-w-4xl mx-auto p-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="mb-6" 
-          onClick={goBack}
-        >
+        <Button variant="ghost" size="sm" className="mb-6" onClick={goBack}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Reports
         </Button>
-        
+
         {/* Header Card with Vehicle Info */}
         <Card className="mb-6">
           <CardHeader>
@@ -211,7 +228,8 @@ export default function ReportDetail() {
               <div>
                 <CardTitle className="text-2xl">Vehicle Report</CardTitle>
                 <CardDescription>
-                  {report.make} {report.model} {report.year} • {report.mileage.toLocaleString()} mi
+                  {report.make} {report.model} {report.year} •{" "}
+                  {report.mileage.toLocaleString()} mi
                 </CardDescription>
               </div>
               <Badge variant="outline" className="bg-green-100 text-green-800">
@@ -251,12 +269,12 @@ export default function ReportDetail() {
               <CardTitle className="text-lg">Reliability Score</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <div className={`text-5xl font-bold ${getScoreColor(result.score || 0)} mb-2`}>
+              <div
+                className={`text-5xl font-bold ${getScoreColor(result.score || 0)} mb-2`}
+              >
                 {result.score || 0}
               </div>
-              <div className="text-sm text-gray-600">
-                out of 100
-              </div>
+              <div className="text-sm text-gray-600">out of 100</div>
             </CardContent>
           </Card>
 
@@ -273,13 +291,14 @@ export default function ReportDetail() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Low end:</span>
                   <span className="font-bold text-green-600">
-                    ${result.cost_from ? result.cost_from.toLocaleString() : '0'}
+                    $
+                    {result.cost_from ? result.cost_from.toLocaleString() : "0"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">High end:</span>
                   <span className="font-bold text-red-600">
-                    ${result.cost_to ? result.cost_to.toLocaleString() : '0'}
+                    ${result.cost_to ? result.cost_to.toLocaleString() : "0"}
                   </span>
                 </div>
                 <div className="text-sm text-gray-500 mt-3 text-center">
@@ -296,10 +315,14 @@ export default function ReportDetail() {
             <div className="flex items-start">
               <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
-                <p className="font-medium text-blue-800 mb-1">Report Coverage</p>
+                <p className="font-medium text-blue-800 mb-1">
+                  Report Coverage
+                </p>
                 <p className="text-blue-700">
-                  We've analyzed repairs for 15,000 miles before your submitted mileage ({(report.mileage - 15000).toLocaleString()} - {report.mileage.toLocaleString()} mi) 
-                  and up to 2 years of future usage based on typical driving patterns.
+                  We've analyzed repairs for 15,000 miles before your submitted
+                  mileage ({(report.mileage - 15000).toLocaleString()} -{" "}
+                  {report.mileage.toLocaleString()} mi) and up to 2 years of
+                  future usage based on typical driving patterns.
                 </p>
               </div>
             </div>
@@ -310,68 +333,108 @@ export default function ReportDetail() {
         {result.complaints && Object.keys(result.complaints).length > 0 && (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle className="text-xl">Known Complaints & Issues</CardTitle>
+              <CardTitle className="text-xl">
+                Known Complaints & Issues
+              </CardTitle>
               <CardDescription>
                 Top reported issues for your vehicle with cost estimates
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {Object.entries(result.complaints).map(([key, complaint]: [string, any]) => (
-                  <div key={key} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-semibold text-lg">{complaint.normalized_title}</h4>
-                      <div className="text-right">
-                        <div className="text-sm text-gray-500">Cost at minimum</div>
-                        <div className="font-bold text-lg">
-                          ${complaint.average_cost ? complaint.average_cost.toLocaleString() : 'N/A'}
+                {Object.entries(result.complaints).map(
+                  ([key, complaint]: [string, any]) => (
+                    <div
+                      key={key}
+                      className="border border-gray-200 rounded-lg p-4"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <h4 className="font-semibold text-lg">
+                          {complaint.normalized_title}
+                        </h4>
+                        <div className="text-right">
+                          <div className="text-sm text-gray-500">
+                            Cost at minimum
+                          </div>
+                          <div className="font-bold text-lg">
+                            $
+                            {complaint.average_cost
+                              ? complaint.average_cost.toLocaleString()
+                              : "N/A"}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <p className="text-gray-700 mb-3">{complaint.description}</p>
-                    
-                    <div className="grid md:grid-cols-2 gap-4 mb-3">
-                      <div>
-                        <span className="text-gray-500 text-sm">Mileage Range: </span>
-                        <span className="font-medium">
-                          {complaint.bucket_from ? complaint.bucket_from.toLocaleString() : '0'} - {complaint.bucket_to ? complaint.bucket_to.toLocaleString() : '0'} mi
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 text-sm">Frequency: </span>
-                        <span className="font-medium">{complaint.times_reported || 'Not specified'}</span>
-                      </div>
-                    </div>
 
-                    {complaint.complaint && (
-                      <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
-                        <span className="font-medium">User report: </span>
-                        "{complaint.complaint}"
-                      </div>
-                    )}
+                      <p className="text-gray-700 mb-3">
+                        {complaint.description}
+                      </p>
 
-                    {complaint.likelyhood !== undefined && (
-                      <div className="flex items-center">
-                        <span className="text-gray-500 text-sm mr-2">Likelihood: </span>
-                        {complaint.likelyhood === null ? (
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Badge variant="outline" className="cursor-help">
-                                Premium Feature <Info className="ml-1 h-3 w-3" />
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Likelihood data is only visible on premium reports</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          <span className="font-medium">{complaint.likelyhood}%</span>
-                        )}
+                      <div className="grid md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                          <span className="text-gray-500 text-sm">
+                            Mileage Range:{" "}
+                          </span>
+                          <span className="font-medium">
+                            {complaint.bucket_from
+                              ? complaint.bucket_from.toLocaleString()
+                              : "0"}{" "}
+                            -{" "}
+                            {complaint.bucket_to
+                              ? complaint.bucket_to.toLocaleString()
+                              : "0"}{" "}
+                            mi
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-sm">
+                            Frequency:{" "}
+                          </span>
+                          <span className="font-medium">
+                            {complaint.times_reported || "Not specified"}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                ))}
+
+                      {complaint.complaint && (
+                        <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
+                          <span className="font-medium">User report: </span>"
+                          {complaint.complaint}"
+                        </div>
+                      )}
+
+                      {complaint.likelyhood !== undefined && (
+                        <div className="flex items-center">
+                          <span className="text-gray-500 text-sm mr-2">
+                            Likelihood:{" "}
+                          </span>
+                          {complaint.likelyhood === null ? (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge
+                                  variant="outline"
+                                  className="cursor-help"
+                                >
+                                  Premium Feature{" "}
+                                  <Info className="ml-1 h-3 w-3" />
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>
+                                  Likelihood data is only visible on premium
+                                  reports
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <span className="font-medium">
+                              {complaint.likelyhood}%
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ),
+                )}
               </div>
             </CardContent>
           </Card>
@@ -386,11 +449,14 @@ export default function ReportDetail() {
             <CardContent>
               <div className="space-y-3">
                 {result.known_issues.map((issue: any, index: number) => (
-                  <div key={index} className={`p-3 rounded-lg border ${
-                    issue.priority === 1 
-                      ? 'bg-red-50 border-red-200' 
-                      : 'bg-gray-50 border-gray-200'
-                  }`}>
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg border ${
+                      issue.priority === 1
+                        ? "bg-red-50 border-red-200"
+                        : "bg-gray-50 border-gray-200"
+                    }`}
+                  >
                     <div className="flex items-start">
                       {issue.priority === 1 ? (
                         <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
@@ -399,9 +465,17 @@ export default function ReportDetail() {
                       )}
                       <div>
                         {issue.priority === 1 && (
-                          <Badge variant="destructive" className="mb-2">Critical</Badge>
+                          <Badge variant="destructive" className="mb-2">
+                            Critical
+                          </Badge>
                         )}
-                        <p className={issue.priority === 1 ? 'text-red-800' : 'text-gray-700'}>
+                        <p
+                          className={
+                            issue.priority === 1
+                              ? "text-red-800"
+                              : "text-gray-700"
+                          }
+                        >
                           {issue.description}
                         </p>
                       </div>
@@ -422,17 +496,21 @@ export default function ReportDetail() {
                 Likely Recalls
               </CardTitle>
               <CardDescription>
-                These are potential recalls, not confirmed recalls for your specific vehicle
+                These are potential recalls, not confirmed recalls for your
+                specific vehicle
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {result.recalls.map((recall: any, index: number) => (
-                  <div key={index} className={`p-3 rounded-lg border ${
-                    recall.priority === 1 
-                      ? 'bg-red-50 border-red-200' 
-                      : 'bg-yellow-50 border-yellow-200'
-                  }`}>
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg border ${
+                      recall.priority === 1
+                        ? "bg-red-50 border-red-200"
+                        : "bg-yellow-50 border-yellow-200"
+                    }`}
+                  >
                     <div className="flex items-start">
                       {recall.priority === 1 ? (
                         <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
@@ -441,9 +519,17 @@ export default function ReportDetail() {
                       )}
                       <div>
                         {recall.priority === 1 && (
-                          <Badge variant="destructive" className="mb-2">Critical</Badge>
+                          <Badge variant="destructive" className="mb-2">
+                            Critical
+                          </Badge>
                         )}
-                        <p className={recall.priority === 1 ? 'text-red-800' : 'text-yellow-800'}>
+                        <p
+                          className={
+                            recall.priority === 1
+                              ? "text-red-800"
+                              : "text-yellow-800"
+                          }
+                        >
                           {recall.description}
                         </p>
                       </div>
@@ -466,7 +552,7 @@ export default function ReportDetail() {
                 {result.suggestions.map((suggestion: any, index: number) => (
                   <div key={index} className="flex items-start text-green-700">
                     <CheckCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm">{suggestion.description}</span>
+                    <span className="text-sm">{suggestion}</span>
                   </div>
                 ))}
               </div>
