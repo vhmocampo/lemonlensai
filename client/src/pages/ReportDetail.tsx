@@ -395,10 +395,24 @@ export default function ReportDetail() {
                         </div>
                       </div>
 
-                      {complaint.complaint && (
+                      {complaint.complaint ? (
                         <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
                           <span className="font-medium">User report: </span>"
                           {complaint.complaint}"
+                        </div>
+                      ) : (
+                        <div className="bg-gray-50 p-3 rounded text-sm mb-3 flex items-center justify-between">
+                          <span className="text-gray-500">User report available on premium reports</span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Badge variant="outline" className="cursor-help">
+                                Premium Feature <Info className="ml-1 h-3 w-3" />
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Specific complaint details are only visible on premium reports</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       )}
 
@@ -567,6 +581,13 @@ export default function ReportDetail() {
             <div>Report ID: {report.uuid || reportId}</div>
           </CardFooter>
         </Card>
+
+        {/* Data Source Disclaimer */}
+        <div className="text-center mt-6 mb-4">
+          <p className="text-xs text-gray-400">
+            Data sourced from known repair sites, NHTSA complaints, popular online forums and JD Power
+          </p>
+        </div>
       </div>
     </TooltipProvider>
   );
