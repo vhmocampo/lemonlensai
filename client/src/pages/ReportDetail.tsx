@@ -329,131 +329,6 @@ export default function ReportDetail() {
           </CardContent>
         </Card>
 
-        {/* Complaints Section */}
-        {result.complaints && Object.keys(result.complaints).length > 0 && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-xl">
-                Known Complaints & Issues
-              </CardTitle>
-              <CardDescription>
-                Top reported issues for your vehicle with cost estimates
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(result.complaints).map(
-                  ([key, complaint]: [string, any]) => (
-                    <div
-                      key={key}
-                      className="border border-gray-200 rounded-lg p-4"
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <h4 className="font-semibold text-lg">
-                          {complaint.normalized_title}
-                        </h4>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">
-                            Cost at minimum
-                          </div>
-                          <div className="font-bold text-lg">
-                            $
-                            {complaint.average_cost
-                              ? complaint.average_cost.toLocaleString()
-                              : "N/A"}
-                          </div>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-700 mb-3">
-                        {complaint.description}
-                      </p>
-
-                      <div className="grid md:grid-cols-2 gap-4 mb-3">
-                        <div>
-                          <span className="text-gray-500 text-sm">
-                            Mileage Range:{" "}
-                          </span>
-                          <span className="font-medium">
-                            {complaint.bucket_from
-                              ? complaint.bucket_from.toLocaleString()
-                              : "0"}{" "}
-                            -{" "}
-                            {complaint.bucket_to
-                              ? complaint.bucket_to.toLocaleString()
-                              : "0"}{" "}
-                            mi
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500 text-sm">
-                            Frequency:{" "}
-                          </span>
-                          <span className="font-medium">
-                            {complaint.times_reported || "Not specified"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {complaint.complaint ? (
-                        <div className="bg-gray-50 p-3 rounded text-sm italic mb-3">
-                          <span className="font-medium">User report: </span>"
-                          {complaint.complaint}"
-                        </div>
-                      ) : (
-                        <div className="bg-gray-50 p-3 rounded text-sm mb-3 flex items-center justify-between">
-                          <span className="text-gray-500">User report available on premium reports</span>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Badge variant="outline" className="cursor-help">
-                                Premium Feature <Info className="ml-1 h-3 w-3" />
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Specific complaint details are only visible on premium reports</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      )}
-
-                      {complaint.likelyhood !== undefined && (
-                        <div className="flex items-center">
-                          <span className="text-gray-500 text-sm mr-2">
-                            Likelihood:{" "}
-                          </span>
-                          {complaint.likelyhood === null ? (
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <Badge
-                                  variant="outline"
-                                  className="cursor-help"
-                                >
-                                  Premium Feature{" "}
-                                  <Info className="ml-1 h-3 w-3" />
-                                </Badge>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  Likelihood data is only visible on premium
-                                  reports
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          ) : (
-                            <span className="font-medium">
-                              {complaint.likelyhood}%
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ),
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Known Issues */}
         {result.known_issues && result.known_issues.length > 0 && (
           <Card className="mb-6">
@@ -555,6 +430,129 @@ export default function ReportDetail() {
           </Card>
         )}
 
+        {/* Complaints Section */}
+        {result.complaints && Object.keys(result.complaints).length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-xl">
+                Known Complaints & Issues
+              </CardTitle>
+              <CardDescription>
+                Top reported issues for your vehicle with cost estimates
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {Object.entries(result.complaints).map(
+                  ([key, complaint]: [string, any]) => (
+                    <div
+                      key={key}
+                      className="border border-gray-200 rounded-lg p-4"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <h4 className="font-semibold text-lg">
+                          {complaint.normalized_title}
+                        </h4>
+                        <div className="text-right">
+                          <div className="text-sm text-gray-500">
+                            Cost at minimum
+                          </div>
+                          <div className="font-bold text-lg">
+                            $
+                            {complaint.average_cost
+                              ? complaint.average_cost.toLocaleString()
+                              : "N/A"}
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-700 mb-3">
+                        {complaint.description}
+                      </p>
+
+                      <div className="grid md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                          <span className="text-gray-500 text-sm">
+                            Mileage Range:{" "}
+                          </span>
+                          <span className="font-medium">
+                            {complaint.bucket_from
+                              ? complaint.bucket_from.toLocaleString()
+                              : "0"}{" "}
+                            -{" "}
+                            {complaint.bucket_to
+                              ? complaint.bucket_to.toLocaleString()
+                              : "0"}{" "}
+                            mi
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-sm">
+                            Frequency:{" "}
+                          </span>
+                          <span className="font-medium">
+                            {complaint.times_reported || "Not specified"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 p-3 rounded text-sm mb-3 flex items-center justify-between">
+                        <span className="text-gray-500">
+                          User report available on premium reports
+                        </span>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge variant="outline" className="cursor-help">
+                              Premium Feature <Info className="ml-1 h-3 w-3" />
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              Specific complaint details are only visible on
+                              premium reports
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+
+                      {complaint.likelyhood !== undefined && (
+                        <div className="flex items-center">
+                          <span className="text-gray-500 text-sm mr-2">
+                            Likelihood:{" "}
+                          </span>
+                          {complaint.likelyhood === null ? (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge
+                                  variant="outline"
+                                  className="cursor-help"
+                                >
+                                  Premium Feature{" "}
+                                  <Info className="ml-1 h-3 w-3" />
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>
+                                  Likelihood data is only visible on premium
+                                  reports
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <span className="font-medium">
+                              {complaint.likelyhood}%
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ),
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Suggestions - Pro Tips */}
         {result.suggestions && result.suggestions.length > 0 && (
           <Card className="mb-6 bg-green-50 border-green-200">
@@ -585,7 +583,8 @@ export default function ReportDetail() {
         {/* Data Source Disclaimer */}
         <div className="text-center mt-6 mb-4">
           <p className="text-xs text-gray-400">
-            Data sourced from known repair sites, NHTSA complaints, popular online forums and JD Power
+            Data sourced from known repair sites, NHTSA complaints, popular
+            online forums and JD Power
           </p>
         </div>
       </div>
