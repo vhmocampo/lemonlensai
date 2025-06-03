@@ -42,11 +42,21 @@ export default function ContactDialog({ open, onClose }: ContactDialogProps) {
     setIsSubmitting(true);
     
     try {
-      await apiRequest("POST", "/api/v1/contact", {
-        email: email.trim(),
-        subject: subject.trim(),
-        message: message.trim(),
+      const response = await fetch("https://lemonlensapp.com/api/v1/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          subject: subject.trim(),
+          message: message.trim(),
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       toast({
         title: "Message Sent",
