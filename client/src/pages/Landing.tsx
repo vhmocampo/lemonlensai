@@ -3,9 +3,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Car, Shield, LineChart, AlertTriangle, Award, CheckCircle, 
-  ArrowRight, Zap, BarChart4, Wrench
+import {
+  Car,
+  Shield,
+  LineChart,
+  AlertTriangle,
+  Award,
+  CheckCircle,
+  ArrowRight,
+  Zap,
+  BarChart4,
+  Wrench,
 } from "lucide-react";
 import RegisterModal from "@/components/auth/RegisterModal";
 import LoginModal from "@/components/auth/LoginModal";
@@ -62,17 +70,32 @@ export default function Landing() {
           <h1 className="text-2xl font-bold text-gray-900">LemonLens.ai</h1>
         </div>
         <nav className="hidden md:flex space-x-6 items-center">
-          <a href="#features" className="text-gray-600 hover:text-yellow-500 transition-colors">Features</a>
-          <a href="#how-it-works" className="text-gray-600 hover:text-yellow-500 transition-colors">How It Works</a>
-          <a href="#pricing" className="text-gray-600 hover:text-yellow-500 transition-colors">Pricing</a>
-          <Button 
-            variant="outline" 
+          <a
+            href="#features"
+            className="text-gray-600 hover:text-yellow-500 transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#how-it-works"
+            className="text-gray-600 hover:text-yellow-500 transition-colors"
+          >
+            How It Works
+          </a>
+          <a
+            href="#pricing"
+            className="text-gray-600 hover:text-yellow-500 transition-colors"
+          >
+            Pricing
+          </a>
+          <Button
+            variant="outline"
             className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white transition"
             onClick={openLoginModal}
           >
             Sign In
           </Button>
-          <Button 
+          <Button
             className="bg-yellow-500 hover:bg-yellow-600 text-white transition"
             onClick={openRegisterModal}
           >
@@ -81,8 +104,8 @@ export default function Landing() {
         </nav>
         <div className="md:hidden">
           {/* Mobile menu button would go here */}
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="border-yellow-500 text-yellow-500"
             onClick={openLoginModal}
           >
@@ -95,37 +118,40 @@ export default function Landing() {
       <section className="container mx-auto px-4 py-20 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-10 md:mb-0">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Avoid Expensive Surprises—Check Your Next Used Car's Real Health
+            Avoid Expensive Surprises!
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Get instant, unbiased reports on reliability, common repairs, and what to check before you sign. 
+            Get instant, unbiased reports on reliability, common repairs, and
+            what to check before you sign. <br />
             Don't let hidden problems cost you thousands later.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button 
+            <Button
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
               onClick={openRegisterModal}
             >
-              Get Your Report Now
+              Sign Up for a FREE Report!
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="border-gray-300 text-gray-700 hover:bg-gray-100 px-8 py-6 text-lg"
               onClick={startAnonymous}
             >
-              Try Without Account
+              Run Standard Report
             </Button>
           </div>
         </div>
         <div className="md:w-1/2 flex justify-center">
           <div className="relative">
-            <img 
+            <img
               src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
               alt="Mechanic working on car engine in garage"
               className="rounded-lg shadow-xl w-full max-w-lg"
             />
             <div className="absolute -bottom-4 -left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
-              <div className="text-sm font-medium">Avoid repairs like this</div>
+              <div className="text-sm font-medium">
+                Common wihout maintenance
+              </div>
               <div className="text-lg font-bold">$3,500+ Engine Rebuild</div>
             </div>
           </div>
@@ -136,9 +162,12 @@ export default function Landing() {
       <section id="features" className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose LemonLens.ai?</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Why Choose LemonLens.ai?
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Our platform uses advanced algorithms to analyze millions of real vehicle complaints and service records.
+              Our platform uses advanced algorithms to analyze millions of real
+              vehicle complaints and service records.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -147,10 +176,13 @@ export default function Landing() {
                 <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-500 mb-4">
                   <LineChart />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Predictive Analysis</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Predictive Analysis
+                </h3>
                 <p className="text-gray-600">
-                  Our AI model predicts potential issues based on your vehicle's make, model, year, and mileage, 
-                  using data from millions of real-world reports.
+                  Our AI model predicts potential issues based on your vehicle's
+                  make, model, year, and mileage, using data from millions of
+                  real-world reports.
                 </p>
               </CardContent>
             </Card>
@@ -159,10 +191,13 @@ export default function Landing() {
                 <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-500 mb-4">
                   <Shield />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Reliability Scoring</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Reliability Scoring
+                </h3>
                 <p className="text-gray-600">
-                  Get a comprehensive reliability score for your vehicle, with detailed breakdowns 
-                  of potential issues by system and severity.
+                  Get a comprehensive reliability score for your vehicle, with
+                  detailed breakdowns of potential issues by system and
+                  severity.
                 </p>
               </CardContent>
             </Card>
@@ -171,10 +206,13 @@ export default function Landing() {
                 <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-500 mb-4">
                   <Wrench />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Repair Estimates</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Repair Estimates
+                </h3>
                 <p className="text-gray-600">
-                  Get accurate repair cost estimates for potential issues, helping you budget for 
-                  future maintenance and avoid unexpected expenses.
+                  Get accurate repair cost estimates for potential issues,
+                  helping you budget for future maintenance and avoid unexpected
+                  expenses.
                 </p>
               </CardContent>
             </Card>
@@ -186,9 +224,12 @@ export default function Landing() {
       <section id="how-it-works" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting a comprehensive vehicle health report is easy with LemonLens.ai
+              Getting a comprehensive vehicle health report is easy with
+              LemonLens.ai
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
@@ -199,7 +240,9 @@ export default function Landing() {
                   1
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Enter Vehicle Details</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Enter Vehicle Details
+              </h3>
               <p className="text-gray-600">
                 Provide your vehicle's make, model, year, and current mileage
               </p>
@@ -211,9 +254,12 @@ export default function Landing() {
                   2
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">AI Analysis</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                AI Analysis
+              </h3>
               <p className="text-gray-600">
-                Our algorithms analyze millions of data points to identify potential issues
+                Our algorithms analyze millions of data points to identify
+                potential issues
               </p>
             </div>
             <div className="text-center">
@@ -223,9 +269,12 @@ export default function Landing() {
                   3
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Detailed Report</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Detailed Report
+              </h3>
               <p className="text-gray-600">
-                Receive a comprehensive health report with prioritized maintenance recommendations
+                Receive a comprehensive health report with prioritized
+                maintenance recommendations
               </p>
             </div>
             <div className="text-center">
@@ -235,9 +284,12 @@ export default function Landing() {
                   4
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Make Informed Decisions</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Make Informed Decisions
+              </h3>
               <p className="text-gray-600">
-                Use your report to plan maintenance, negotiate car purchases, or track your vehicle's health
+                Use your report to plan maintenance, negotiate car purchases, or
+                track your vehicle's health
               </p>
             </div>
           </div>
@@ -248,23 +300,31 @@ export default function Landing() {
       <section id="pricing" className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose the plan that fits your needs
+              Choose the option that fits your needs
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Free + Premium Welcome</h3>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">$0</div>
-                  <p className="text-gray-600">Perfect for car owners checking once</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Free + Standard
+                  </h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">
+                    $0
+                  </div>
+                  <p className="text-gray-600">
+                    Perfect for trying out the product
+                  </p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Unlimited free reports</span>
+                    <span>Unlimited standard reports</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
@@ -272,10 +332,10 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Basic reliability score & common issues</span>
+                    <span>General reliability score & common issues</span>
                   </li>
                 </ul>
-                <Button 
+                <Button
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
                   onClick={openRegisterModal}
                 >
@@ -285,33 +345,37 @@ export default function Landing() {
             </Card>
             <Card className="border-2 border-yellow-500 shadow-xl relative">
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-white py-1 px-4 rounded-full text-sm font-medium">
-                Best for Car Buyers
+                Best Value
               </div>
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Bulk Reports</h3>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">$19.99</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Bulk Reports
+                  </h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">
+                    $19.99
+                  </div>
                   <p className="text-gray-600">30 premium reports</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Likelihood of issues data</span>
+                    <span>Likelihood of upcoming repairs</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Tips for inspecting the car</span>
+                    <span>Tips for inspecting the car in person</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Enhanced with zip code & Carfax data</span>
+                    <span>Submit zip code and Carfax data for detailed analysis</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Update reports as you get dealer info</span>
+                    <span>Update reports as you get answers from dealer</span>
                   </li>
                 </ul>
-                <Button 
+                <Button
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
                   onClick={openRegisterModal}
                 >
@@ -322,9 +386,15 @@ export default function Landing() {
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Single Premium</h3>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">$5</div>
-                  <p className="text-gray-600">Perfect for testing or one-off reports</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Single Premium
+                  </h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">
+                    $5
+                  </div>
+                  <p className="text-gray-600">
+                    Perfect for testing or one-off reports
+                  </p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
@@ -333,19 +403,11 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Likelihood & inspection tips</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Enhanced location data</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Perfect for trying the service</span>
+                    <span>Perfect for trying the service beyond the first free report</span>
                   </li>
                 </ul>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white"
                   onClick={openRegisterModal}
                 >
@@ -360,11 +422,14 @@ export default function Landing() {
       {/* CTA Section */}
       <section className="py-20 bg-yellow-500">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to know your vehicle's true health?</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to know your vehicle's true health?
+          </h2>
           <p className="text-xl text-white opacity-90 max-w-2xl mx-auto mb-8">
-            Join thousands of smart vehicle owners who use LemonLens.ai to avoid unexpected repairs and make informed decisions.
+            Join thousands of smart vehicle owners who use LemonLens.ai to avoid
+            unexpected repairs and make informed decisions.
           </p>
-          <Button 
+          <Button
             className="bg-white text-yellow-500 hover:bg-gray-100 px-8 py-6 text-lg"
             onClick={openRegisterModal}
           >
@@ -389,46 +454,87 @@ export default function Landing() {
             <div>
               <h4 className="text-lg font-medium mb-4">Product</h4>
               <ul className="space-y-2">
-                <li><a href="#features" className="text-gray-400 hover:text-yellow-500 transition-colors">Features</a></li>
-                <li><a href="#how-it-works" className="text-gray-400 hover:text-yellow-500 transition-colors">How it works</a></li>
-                <li><a href="#pricing" className="text-gray-400 hover:text-yellow-500 transition-colors">Pricing</a></li>
+                <li>
+                  <a
+                    href="#features"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#how-it-works"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    How it works
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Pricing
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-medium mb-4">Resources</h4>
               <ul className="space-y-2">
-                <li><button onClick={openContactDialog} className="text-gray-400 hover:text-yellow-500 transition-colors">Contact</button></li>
+                <li>
+                  <button
+                    onClick={openContactDialog}
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Contact
+                  </button>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-medium mb-4">Legal</h4>
               <ul className="space-y-2">
-                <li><a href="/privacy-policy" className="text-gray-400 hover:text-yellow-500 transition-colors">Privacy Policy</a></li>
-                <li><a href="/terms-of-service" className="text-gray-400 hover:text-yellow-500 transition-colors">Terms of Service</a></li>
+                <li>
+                  <a
+                    href="/privacy-policy"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/terms-of-service"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Terms of Service
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>© {new Date().getFullYear()} LemonLens.ai. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} LemonLens.ai. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
 
       {/* Modals */}
-      <LoginModal 
-        open={loginModalOpen} 
-        onClose={closeModals} 
-        onOpenRegister={openRegisterModal} 
+      <LoginModal
+        open={loginModalOpen}
+        onClose={closeModals}
+        onOpenRegister={openRegisterModal}
       />
-      <RegisterModal 
-        open={registerModalOpen} 
-        onClose={closeModals} 
-        onOpenLogin={openLoginModal} 
+      <RegisterModal
+        open={registerModalOpen}
+        onClose={closeModals}
+        onOpenLogin={openLoginModal}
       />
-      <ContactDialog 
-        open={contactDialogOpen} 
-        onClose={closeContactDialog} 
-      />
+      <ContactDialog open={contactDialogOpen} onClose={closeContactDialog} />
     </div>
   );
 }

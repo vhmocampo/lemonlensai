@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Landing from "@/pages/Landing";
+import HowItWorks from "@/pages/HowItWorks";
 import ReportDetail from "@/pages/ReportDetail";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
@@ -25,6 +26,7 @@ function Router() {
       {/* Landing page is default, with explicit route to home for anonymous access */}
       <Route path="/" component={isAuthenticated ? Home : Landing} />
       <Route path="/home" component={Home} />
+      <Route path="/how-it-works" component={HowItWorks} />
       <Route path="/report/:reportId" component={ReportDetail} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
