@@ -84,19 +84,19 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-10 md:mb-0">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Know Your Vehicle's True Health
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            Avoid Expensive Surprises—Check Your Next Used Car's Real Health
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            LemonLens.ai analyzes real-world data to predict potential issues with your vehicle, 
-            helping you avoid costly repairs and make informed decisions.
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            Get instant, unbiased reports on reliability, common repairs, and what to check before you sign. 
+            Don't let hidden problems cost you thousands later.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
               onClick={openRegisterModal}
             >
-              Create Free Account
+              Get Your Report Now
             </Button>
             <Button 
               variant="outline" 
@@ -109,40 +109,14 @@ export default function Landing() {
         </div>
         <div className="md:w-1/2 flex justify-center">
           <div className="relative">
-            <div className="bg-yellow-100 rounded-lg p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Vehicle Health Report</h3>
-              <div className="flex items-center mb-6">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-500 mr-4">
-                  <div className="text-3xl font-bold">85</div>
-                </div>
-                <div>
-                  <div className="text-lg font-medium">Reliability Score</div>
-                  <div className="text-sm text-gray-500">Above average for its class</div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-white p-3 rounded-md">
-                  <div className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2" />
-                    <div className="font-medium">Engine in good condition</div>
-                  </div>
-                </div>
-                <div className="bg-white p-3 rounded-md">
-                  <div className="flex items-center">
-                    <AlertTriangle className="text-yellow-500 mr-2" />
-                    <div className="font-medium">Brake pads may need replacement soon</div>
-                  </div>
-                </div>
-                <div className="bg-white p-3 rounded-md">
-                  <div className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2" />
-                    <div className="font-medium">Transmission functioning normally</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="absolute -top-4 -right-4 bg-yellow-500 text-white py-1 px-3 rounded-full text-sm font-medium">
-              Sample Report
+            <img 
+              src="https://images.unsplash.com/photo-1581093577421-f561a654a353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+              alt="Vehicle being repaired in garage"
+              className="rounded-lg shadow-xl w-full max-w-lg"
+            />
+            <div className="absolute -bottom-4 -left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
+              <div className="text-sm font-medium">Avoid repairs like this</div>
+              <div className="text-lg font-bold">$3,500+ Engine Rebuild</div>
             </div>
           </div>
         </div>
@@ -313,19 +287,23 @@ export default function Landing() {
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Ask any questions about the car</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Upload dealership data for analysis</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Detailed specific complaint data</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
                     <span>Unlimited vehicle reports</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Advanced reliability analysis</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Detailed repair cost estimates</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Report history and tracking</span>
+                    <span>Advanced repair likelihood data</span>
                   </li>
                 </ul>
                 <Button 
