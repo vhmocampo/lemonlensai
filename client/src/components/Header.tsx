@@ -30,10 +30,8 @@ export default function Header() {
             
             {/* Navigation */}
             <nav className="hidden md:ml-10 md:flex md:space-x-8">
-              <Link href="/how-it-works">
-                <a className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
-                  How it Works
-                </a>
+              <Link href="/how-it-works" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                How it Works
               </Link>
             </nav>
           </div>
