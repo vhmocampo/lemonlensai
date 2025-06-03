@@ -350,7 +350,7 @@ export default function Landing() {
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Bulk Reports
+                    Buyer's Bundle
                   </h3>
                   <div className="text-4xl font-bold text-gray-900 mb-2">
                     $19.99
