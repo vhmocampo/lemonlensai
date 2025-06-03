@@ -110,8 +110,8 @@ export default function Landing() {
         <div className="md:w-1/2 flex justify-center">
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1581093577421-f561a654a353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-              alt="Vehicle being repaired in garage"
+              src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+              alt="Mechanic working on car engine in garage"
               className="rounded-lg shadow-xl w-full max-w-lg"
             />
             <div className="absolute -bottom-4 -left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
