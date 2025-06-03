@@ -72,7 +72,7 @@ export default function ContactDialog({ open, onClose }: ContactDialogProps) {
       console.error("Contact form error:", error);
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: "Failed to send message. Please check your connection and try again, or email us directly at support@lemonlens.ai",
         variant: "destructive",
       });
     } finally {

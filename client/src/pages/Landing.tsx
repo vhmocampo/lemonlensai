@@ -257,100 +257,99 @@ export default function Landing() {
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Free</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Free + Premium Welcome</h3>
                   <div className="text-4xl font-bold text-gray-900 mb-2">$0</div>
-                  <p className="text-gray-600">Perfect for occasional use</p>
+                  <p className="text-gray-600">Perfect for car owners checking once</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>1 vehicle report per month</span>
+                    <span>Unlimited free reports</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Basic reliability score</span>
+                    <span>One free premium report when you sign up</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Common issue identification</span>
-                  </li>
-                </ul>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white"
-                  onClick={startAnonymous}
-                >
-                  Get Started Free
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="border-2 border-yellow-500 shadow-xl relative">
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-white py-1 px-4 rounded-full text-sm font-medium">
-                Most Popular
-              </div>
-              <CardContent className="p-6">
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Premium</h3>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">$9.99</div>
-                  <p className="text-gray-600">Per month, billed monthly</p>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Ask any questions about the car</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Upload dealership data for analysis</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Detailed specific complaint data</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Unlimited vehicle reports</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Advanced repair likelihood data</span>
+                    <span>Basic reliability score & common issues</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
                   onClick={openRegisterModal}
                 >
-                  Choose Premium
+                  Sign Up Free
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="border-2 border-yellow-500 shadow-xl relative">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-white py-1 px-4 rounded-full text-sm font-medium">
+                Best for Car Buyers
+              </div>
+              <CardContent className="p-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Bulk Reports</h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">$19.99</div>
+                  <p className="text-gray-600">30 premium reports</p>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Likelihood of issues data</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Tips for inspecting the car</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Enhanced with zip code & Carfax data</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>Update reports as you get dealer info</span>
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
+                  onClick={openRegisterModal}
+                >
+                  Get Bulk Reports
                 </Button>
               </CardContent>
             </Card>
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Enterprise</h3>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">Custom</div>
-                  <p className="text-gray-600">For dealerships & auto shops</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Single Premium</h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">$5</div>
+                  <p className="text-gray-600">Perfect for testing or one-off reports</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Bulk report generation</span>
+                    <span>All premium features</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>API access</span>
+                    <span>Likelihood & inspection tips</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>White label options</span>
+                    <span>Enhanced location data</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Dedicated support</span>
+                    <span>Perfect for trying the service</span>
                   </li>
                 </ul>
-                <Button variant="outline" className="w-full">
-                  Contact Sales
+                <Button 
+                  variant="outline" 
+                  className="w-full border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white"
+                  onClick={openRegisterModal}
+                >
+                  Buy One Report
                 </Button>
               </CardContent>
             </Card>
