@@ -9,12 +9,14 @@ import {
 } from "lucide-react";
 import RegisterModal from "@/components/auth/RegisterModal";
 import LoginModal from "@/components/auth/LoginModal";
+import ContactDialog from "@/components/ContactDialog";
 
 export default function Landing() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
   // If user is logged in, redirect to home
   if (user) {
@@ -35,6 +37,14 @@ export default function Landing() {
   const closeModals = () => {
     setLoginModalOpen(false);
     setRegisterModalOpen(false);
+  };
+
+  const openContactDialog = () => {
+    setContactDialogOpen(true);
+  };
+
+  const closeContactDialog = () => {
+    setContactDialogOpen(false);
   };
 
   const startAnonymous = () => {
@@ -388,9 +398,7 @@ export default function Landing() {
             <div>
               <h4 className="text-lg font-medium mb-4">Resources</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors">Blog</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors">Help Center</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors">Contact</a></li>
+                <li><button onClick={openContactDialog} className="text-gray-400 hover:text-yellow-500 transition-colors">Contact</button></li>
               </ul>
             </div>
             <div>
@@ -417,6 +425,10 @@ export default function Landing() {
         open={registerModalOpen} 
         onClose={closeModals} 
         onOpenLogin={openLoginModal} 
+      />
+      <ContactDialog 
+        open={contactDialogOpen} 
+        onClose={closeContactDialog} 
       />
     </div>
   );
