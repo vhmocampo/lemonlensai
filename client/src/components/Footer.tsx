@@ -20,8 +20,8 @@ export default function Footer() {
           <div className="md:flex md:items-center md:justify-between">
             <div className="flex justify-center space-x-6 md:order-2">
               <Link href="/how-it-works" className="text-gray-400 hover:text-gray-500">
-                <span className="sr-only">How it Works</span>
-                <span className="text-sm">How it Works</span>
+                <span className="sr-only">Our Process</span>
+                <span className="text-sm">Our Process</span>
               </Link>
               <Link href="/privacy-policy" className="text-gray-400 hover:text-gray-500">
                 <span className="sr-only">Privacy Policy</span>

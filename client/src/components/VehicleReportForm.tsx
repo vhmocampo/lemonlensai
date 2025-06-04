@@ -7,9 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useVehicleData } from "@/hooks/useVehicleData";
 import { useReports } from "@/hooks/useReports";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 
 interface VehicleReportFormProps {
   onReportCreated: () => void;
@@ -19,11 +27,15 @@ const formSchema = z.object({
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
   year: z.string().min(1, "Year is required"),
+  zipCode: z.string().optional().refine(
+    val => !val || val.length >= 5,
+    { message: "Zip code must be at least 5 characters" }
+  ),
   mileage: z.string().refine(
     val => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 1000000,
     { message: "Mileage must be a number between 1 and 1,000,000" }
   ),
-  vin: z.string().optional(),
+  additionalInfo: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -49,8 +61,9 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
       make: "",
       model: "",
       year: "",
+      zipCode: "",
       mileage: "",
-      vin: "",
+      additionalInfo: "",
     },
   });
 
@@ -83,8 +96,9 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
         make: data.make,
         model: data.model,
         year: data.year,
+        zipCode: data.zipCode,
         mileage: parseInt(data.mileage),
-        vin: data.vin || undefined,
+        additionalInfo: data.additionalInfo || undefined,
       });
       
       toast({
@@ -104,110 +118,167 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Generate Vehicle Health Report</h2>
-      <p className="mb-6 text-gray-600">Enter your vehicle details to generate a comprehensive health report based on real-world complaint data.</p>
+    <TooltipProvider>
+      <div className="p-6">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Vehicle Report Generator</h2>
+        <p className="mb-6 text-gray-600">Enter make, model year and mileage for standard reports. Submitting a zip code and more information will deduct from premium credits.</p>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <FormField
-              control={form.control}
-              name="make"
-              render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                  <FormLabel>Make</FormLabel>
-                  <Select
-                    disabled={isLoadingMakes}
-                    onValueChange={handleMakeChange}
-                    value={field.value}
-                  >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <FormField
+                control={form.control}
+                name="make"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Make</FormLabel>
+                    <Select
+                      disabled={isLoadingMakes}
+                      onValueChange={handleMakeChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Make" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {makes.map((make) => (
+                          <SelectItem key={make.id} value={make.name}>
+                            {make.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="model"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Model</FormLabel>
+                    <Select
+                      disabled={isLoadingModels || !form.watch("make")}
+                      onValueChange={handleModelChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Model" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {models.map((model) => (
+                          <SelectItem key={model.id} value={model.name}>
+                            {model.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="year"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Year</FormLabel>
+                    <Select
+                      disabled={isLoadingYears || !form.watch("model")}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Year" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {years.map((year) => (
+                          <SelectItem key={year.id} value={year.year.toString()}>
+                            {year.year}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="zipCode"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel className="flex items-center">
+                      Zip Code
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Premium feature - Get location-specific repair cost estimates</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Make" />
-                      </SelectTrigger>
+                      <Input 
+                        placeholder="e.g. 90210" 
+                        {...field} 
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {makes.map((make) => (
-                        <SelectItem key={make.id} value={make.name}>
-                          {make.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="model"
-              render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                  <FormLabel>Model</FormLabel>
-                  <Select
-                    disabled={isLoadingModels || !form.watch("make")}
-                    onValueChange={handleModelChange}
-                    value={field.value}
-                  >
+              <FormField
+                control={form.control}
+                name="mileage"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-4">
+                    <FormLabel>Current Mileage</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Model" />
-                      </SelectTrigger>
+                      <Input 
+                        type="number" 
+                        placeholder="e.g. 45000" 
+                        {...field} 
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {models.map((model) => (
-                        <SelectItem key={model.id} value={model.name}>
-                          {model.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
-              name="year"
+              name="additionalInfo"
               render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                  <FormLabel>Year</FormLabel>
-                  <Select
-                    disabled={isLoadingYears || !form.watch("model")}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Year" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {years.map((year) => (
-                        <SelectItem key={year.id} value={year.year.toString()}>
-                          {year.year}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="mileage"
-              render={({ field }) => (
-                <FormItem className="sm:col-span-3">
-                  <FormLabel>Current Mileage</FormLabel>
+                <FormItem>
+                  <FormLabel className="flex items-center">
+                    More Information
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Premium feature - Get personalized analysis based on your specific concerns</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="e.g. 45000" 
+                    <Textarea 
+                      placeholder="Any additional details about the vehicle, such as a listing page, CarFax report or answers from a dealer. You can copy and paste here."
+                      className="min-h-[100px]"
                       {...field} 
                     />
                   </FormControl>
@@ -216,40 +287,23 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="vin"
-              render={({ field }) => (
-                <FormItem className="sm:col-span-3">
-                  <FormLabel>VIN (Optional)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Enter VIN for more accurate results" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <Button 
+              type="submit" 
+              className="w-full py-3 px-4 text-base font-medium text-gray-900 bg-lemon-500 hover:bg-lemon-600"
+              disabled={isCreating}
+            >
+              {isCreating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Generate Report"
               )}
-            />
-          </div>
-
-          <Button 
-            type="submit" 
-            className="w-full py-3 px-4 text-base font-medium text-gray-900 bg-lemon-500 hover:bg-lemon-600"
-            disabled={isCreating}
-          >
-            {isCreating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              "Generate Report"
-            )}
-          </Button>
-        </form>
-      </Form>
-    </div>
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </TooltipProvider>
   );
 }

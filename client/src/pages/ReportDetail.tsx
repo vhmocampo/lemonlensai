@@ -263,22 +263,8 @@ export default function ReportDetail() {
 
         {/* Score and Cost Overview */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Reliability Score */}
-          <Card className={`border-2 ${getScoreBg(result.score || 0)}`}>
-            <CardHeader>
-              <CardTitle className="text-lg">Reliability Score</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div
-                className={`text-5xl font-bold ${getScoreColor(result.score || 0)} mb-2`}
-              >
-                {result.score || 0}
-              </div>
-              <div className="text-sm text-gray-600">out of 100</div>
-            </CardContent>
-          </Card>
 
-          {/* Cost Estimates */}
+{/* Cost Estimates */}
           <Card className="border-2 border-orange-200">
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
@@ -308,6 +294,128 @@ export default function ReportDetail() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Reliability Score */}
+          <Card className={`border-2 ${getScoreBg(result.score || 0)}`}>
+            <CardHeader>
+              <CardTitle className="text-lg">Reliability Score</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <div
+                className={`text-5xl font-bold ${getScoreColor(result.score || 0)} mb-2`}
+              >
+                {result.score || 0}
+              </div>
+              <div className="text-sm text-gray-600">out of 100</div>
+            </CardContent>
+          </Card>
+
+        </div>
+
+        {/* Known Issues and Recalls Section - Side by Side when both exist */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Known Issues */}
+          {result.known_issues && result.known_issues.length > 0 && (
+            <Card className={`${!(result.recalls && result.recalls.length > 0) ? "md:col-span-2" : ""}`}>
+              <CardHeader>
+          <CardTitle className="text-xl">Known Issues</CardTitle>
+          <CardDescription>
+            Well-known issues with this vehicle model.
+          </CardDescription>
+              </CardHeader>
+              <CardContent>
+          <div className="space-y-3">
+            {result.known_issues.map((issue: any, index: number) => (
+              <div
+                key={index}
+                className={`p-3 rounded-lg border ${
+            issue.priority === 1
+              ? "bg-red-50 border-red-200"
+              : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-start">
+            {issue.priority === 1 ? (
+              <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
+            ) : (
+              <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+            )}
+            <div>
+              {issue.priority === 1 && (
+                <Badge variant="destructive" className="mb-2">
+                  Critical
+                </Badge>
+              )}
+              <p
+                className={
+                  issue.priority === 1
+              ? "text-red-800"
+              : "text-gray-700"
+                }
+              >
+                {issue.description}
+              </p>
+            </div>
+                </div>
+              </div>
+            ))}
+          </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Recalls */}
+          {result.recalls && result.recalls.length > 0 && (
+            <Card className={`${!(result.known_issues && result.known_issues.length > 0) ? "md:col-span-2" : ""}`}>
+              <CardHeader>
+          <CardTitle className="text-xl flex items-center">
+            <Shield className="mr-2 h-5 w-5" />
+            Possible Recalls
+          </CardTitle>
+          <CardDescription>
+            Possible recalls; always check with your dealer.
+          </CardDescription>
+              </CardHeader>
+              <CardContent>
+          <div className="space-y-3">
+            {result.recalls.map((recall: any, index: number) => (
+              <div
+                key={index}
+                className={`p-3 rounded-lg border ${
+            recall.priority === 1
+              ? "bg-red-50 border-red-200"
+              : "bg-yellow-50 border-yellow-200"
+                }`}
+              >
+                <div className="flex items-start">
+            {recall.priority === 1 ? (
+              <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
+            ) : (
+              <Shield className="h-5 w-5 text-yellow-600 mr-3 mt-0.5 flex-shrink-0" />
+            )}
+            <div>
+              {recall.priority === 1 && (
+                <Badge variant="destructive" className="mb-2">
+                  Critical
+                </Badge>
+              )}
+              <p
+                className={
+                  recall.priority === 1
+              ? "text-red-800"
+              : "text-yellow-800"
+                }
+              >
+                {recall.description}
+              </p>
+            </div>
+                </div>
+              </div>
+            ))}
+          </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Data Coverage Notice */}
@@ -320,115 +428,13 @@ export default function ReportDetail() {
                   Report Coverage
                 </p>
                 <p className="text-blue-700">
-                  Repairs listed are estimated on broad general complaints and
-                  may not apply to every car. For specific details, consider a
-                  premium report.
+                  Listed repairs are based on general trends and may not apply to your specific vehicle. 
+                  <br />For detailed information unique to your car, consider upgrading to a premium report.
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-
-        {/* Known Issues */}
-        {result.known_issues && result.known_issues.length > 0 && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-xl">Known Issues</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {result.known_issues.map((issue: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border ${
-                      issue.priority === 1
-                        ? "bg-red-50 border-red-200"
-                        : "bg-gray-50 border-gray-200"
-                    }`}
-                  >
-                    <div className="flex items-start">
-                      {issue.priority === 1 ? (
-                        <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
-                      )}
-                      <div>
-                        {issue.priority === 1 && (
-                          <Badge variant="destructive" className="mb-2">
-                            Critical
-                          </Badge>
-                        )}
-                        <p
-                          className={
-                            issue.priority === 1
-                              ? "text-red-800"
-                              : "text-gray-700"
-                          }
-                        >
-                          {issue.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Recalls */}
-        {result.recalls && result.recalls.length > 0 && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
-                <Shield className="mr-2 h-5 w-5" />
-                Likely Recalls
-              </CardTitle>
-              <CardDescription>
-                These are potential recalls, not confirmed recalls for your
-                specific vehicle
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {result.recalls.map((recall: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border ${
-                      recall.priority === 1
-                        ? "bg-red-50 border-red-200"
-                        : "bg-yellow-50 border-yellow-200"
-                    }`}
-                  >
-                    <div className="flex items-start">
-                      {recall.priority === 1 ? (
-                        <XCircle className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <Shield className="h-5 w-5 text-yellow-600 mr-3 mt-0.5 flex-shrink-0" />
-                      )}
-                      <div>
-                        {recall.priority === 1 && (
-                          <Badge variant="destructive" className="mb-2">
-                            Critical
-                          </Badge>
-                        )}
-                        <p
-                          className={
-                            recall.priority === 1
-                              ? "text-red-800"
-                              : "text-yellow-800"
-                          }
-                        >
-                          {recall.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Complaints Section */}
         {result.complaints && Object.keys(result.complaints).length > 0 && (

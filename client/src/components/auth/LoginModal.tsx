@@ -61,16 +61,6 @@ export default function LoginModal({ open, onClose, onOpenRegister }: LoginModal
           </DialogDescription>
         </DialogHeader>
 
-        <div className="absolute top-0 right-0 pt-4 pr-4">
-          <button
-            onClick={onClose}
-            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lemon-500"
-          >
-            <span className="sr-only">Close</span>
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-
         <Button
           variant="outline"
           onClick={handleGoogleLogin}

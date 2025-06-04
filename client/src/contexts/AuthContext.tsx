@@ -9,6 +9,7 @@ interface User {
   username: string;
   email: string;
   token?: string;
+  credits?: number;
 }
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   loginWithModal: () => void;
   logout: () => void;
+  updateUserCredits: (credits: number) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,8 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const data = await response.json();
           
           // Get the exact UUID session_id from the API response
-          // Some APIs return session_id directly, others may have it nested in a data object
-          const newSessionId = data.session_id || (data.data && data.data.session_id);
+          const newSessionId = data.session_id;
           
           if (!newSessionId) {
             console.error("No session ID found in API response", data);
@@ -100,7 +101,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       const response = await apiRequest("POST", "/auth/login", {
         email,
-        password
+        password,
+        session_id: sessionId // Include session_id for report migration
       });
       
       const data = await response.json();
@@ -110,7 +112,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: data.user.id,
         username: data.user.name,
         email: data.user.email,
-        token: data.token
+        token: data.token,
+        credits: data.user.credits
       };
       
       setUser(userData);
@@ -119,6 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Clear session ID as we now have a user
       setSessionId(null);
       localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiry");
       
       // Invalidate reports cache to fetch user reports
       queryClient.invalidateQueries({ queryKey: ["/reports"] });
@@ -146,7 +150,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name: username, // API expects 'name' instead of 'username'
         email,
         password,
-        password_confirmation: password
+        password_confirmation: password,
+        session_id: sessionId // Include session_id for report migration
       });
       
       const data = await response.json();
@@ -156,7 +161,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: data.user.id,
         username: data.user.name,
         email: data.user.email,
-        token: data.token
+        token: data.token,
+        credits: data.user.credits
       };
       
       setUser(userData);
@@ -165,6 +171,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Clear session ID as we now have a user
       setSessionId(null);
       localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiry");
       
       // Invalidate reports cache to fetch user reports
       queryClient.invalidateQueries({ queryKey: ["/reports"] });
@@ -214,18 +221,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         callback: async (tokenResponse: any) => {
           if (tokenResponse.access_token) {
             try {
-              // Send the token directly to the LemonLens API with VEHICLE_API_KEY
-              const response = await fetch("https://lemonlensapp.com/api/v1/auth/google", {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                  'Authorization': `Bearer ${import.meta.env.VITE_VEHICLE_API_KEY}`
-                },
-                body: JSON.stringify({
-                  access_token: tokenResponse.access_token,
-                  session_id: sessionId || null
-                })
+              // Send the token to the LemonLens API using apiRequest
+              const response = await apiRequest("POST", "/auth/google", {
+                access_token: tokenResponse.access_token,
+                session_id: sessionId || null
               });
               
               const data = await response.json();
@@ -244,6 +243,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
               // Clear session ID as we now have a user
               setSessionId(null);
               localStorage.removeItem("sessionId");
+              localStorage.removeItem("sessionExpiry");
               
               // Invalidate reports cache to fetch user reports
               queryClient.invalidateQueries({ queryKey: ["/reports"] });
@@ -306,8 +306,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const data = await response.json();
         
         // Get the exact session_id from the API response
-        // Some APIs return session_id directly, others may have it nested in a data object
-        const newSessionId = data.session_id || (data.data && data.data.session_id);
+        const newSessionId = data.session_id;
         
         if (!newSessionId) {
           console.error("No session ID found in API response during logout", data);
@@ -340,6 +339,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   };
 
+  const updateUserCredits = (credits: number) => {
+    if (user) {
+      const updatedUser = { ...user, credits };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
   const value = {
     user,
     sessionId,
@@ -350,6 +357,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loginWithGoogle,
     loginWithModal,
     logout,
+    updateUserCredits,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

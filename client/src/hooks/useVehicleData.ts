@@ -1,7 +1,23 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
-import { VehicleMake, VehicleModel, VehicleYear } from "@shared/schema";
+
+interface VehicleMake {
+  id: number;
+  name: string;
+}
+
+interface VehicleModel {
+  id: number;
+  makeId: number;
+  name: string;
+}
+
+interface VehicleYear {
+  id: number;
+  modelId: number;
+  year: number;
+}
 
 export function useVehicleData() {
   const [selectedMakeId, setSelectedMakeId] = useState<number | null>(null);
@@ -15,7 +31,7 @@ export function useVehicleData() {
   });
   
   // Transform the makes array into the format our app expects
-  const makes: VehicleMake[] = (makesResponse?.makes || []).map((name, index) => ({
+  const makes: VehicleMake[] = (makesResponse?.makes || []).map((name: string, index: number) => ({
     id: index + 1,
     name
   }));
@@ -29,7 +45,7 @@ export function useVehicleData() {
   });
   
   // Transform the models array into the format our app expects
-  const models: VehicleModel[] = (modelsResponse?.models || []).map((name, index) => ({
+  const models: VehicleModel[] = (modelsResponse?.models || []).map((name: string, index: number) => ({
     id: index + 1,
     makeId: selectedMakeId || 0,
     name
@@ -47,7 +63,7 @@ export function useVehicleData() {
   });
   
   // Transform the years array into the format our app expects - but keep year as string
-  const years: any[] = (yearsResponse?.years || []).map((yearStr, index) => ({
+  const years: any[] = (yearsResponse?.years || []).map((yearStr: string, index: number) => ({
     id: index + 1,
     modelId: selectedModelId || 0,
     year: yearStr // Keep as string to match form expectations

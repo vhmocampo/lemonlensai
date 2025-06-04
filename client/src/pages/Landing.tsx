@@ -122,7 +122,7 @@ export default function Landing() {
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Our premium reports can help you save thousands on unexpected repairs.<br />
-            Standard reports are free, no credit card needed. Forever.
+            Standard reports are free, no credit card needed. <i>Forever.</i>
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button

@@ -1,11 +1,26 @@
 import { useState } from "react";
-import { Report } from "@shared/schema";
 import { formatDistanceToNow } from "date-fns";
 import { ChevronDown, Clock, AlertCircle, CheckCircle, RefreshCw, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useReports } from "@/hooks/useReports";
 import { useToast } from "@/hooks/use-toast";
+
+interface Report {
+  id: number;
+  uuid: string;
+  make: string;
+  model: string;
+  year: number;
+  mileage: number;
+  status: string;
+  createdAt: string | null;
+  updatedAt: string | null;
+  userId: string | null;
+  sessionId: string | null;
+  vin: string | null;
+  result: any;
+}
 
 interface ReportItemProps {
   report: Report;
@@ -19,7 +34,7 @@ export default function ReportItem({ report }: ReportItemProps) {
   const handleRetry = async () => {
     try {
       // Use uuid field if it exists (from API), otherwise use id (from local DB)
-      const reportId = report.uuid || report.id;
+      const reportId = report.uuid || report.id.toString();
       await retryReport(reportId);
       toast({
         title: "Processing Restarted",
@@ -44,7 +59,7 @@ export default function ReportItem({ report }: ReportItemProps) {
 
   const getStatusBadge = () => {
     // Check if the report has a completed_at property or created_at field from API
-    const isCompleted = report.completed_at || report.created_at ? true : false;
+    const isCompleted = report.result && Object.keys(report.result).length > 0;
     
     // Use the explicit status field with fallback logic
     const status = report.status || (isCompleted ? "completed" : "processing");
@@ -93,7 +108,7 @@ export default function ReportItem({ report }: ReportItemProps) {
             {report.make} {report.model} {report.year}
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Report #{report.id} • {formatDate(report.createdAt)}
+            Report #{report.id} • {formatDate(report.createdAt || '')}
           </p>
         </div>
         <div className="flex items-center space-x-3">
@@ -164,7 +179,7 @@ export default function ReportItem({ report }: ReportItemProps) {
                           <span className="text-xs font-medium text-gray-500">Common Issues</span>
                           <span className="text-xs font-medium text-gray-500">Frequency</span>
                         </div>
-                        {report.result.commonIssues.map((issue, index) => (
+                        {report.result.commonIssues.map((issue: any, index: number) => (
                           <div key={index} className="mb-2">
                             <div className="flex justify-between mb-1">
                               <span className="text-sm text-gray-700">{issue.name}</span>
@@ -190,7 +205,7 @@ export default function ReportItem({ report }: ReportItemProps) {
                 <div className="mt-6">
                   <h4 className="text-sm font-medium text-gray-500">DETAILED FINDINGS</h4>
                   <div className="mt-2 space-y-4">
-                    {report.result.findings.map((finding, index) => (
+                    {report.result.findings.map((finding: any, index: number) => (
                       <div key={index} className="bg-white overflow-hidden shadow rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
                           <h5 className="text-lg font-medium text-gray-900">{finding.title}</h5>
@@ -221,7 +236,7 @@ export default function ReportItem({ report }: ReportItemProps) {
                 <div className="mt-6 border-t border-gray-200 pt-6">
                   <h4 className="text-sm font-medium text-gray-500">RECOMMENDED MAINTENANCE</h4>
                   <ul className="mt-2 divide-y divide-gray-200">
-                    {report.result.maintenance.map((item, index) => (
+                    {report.result.maintenance.map((item: any, index: number) => (
                       <li key={index} className="py-3 flex justify-between">
                         <div className="flex items-center">
                           <CheckCircle className="h-5 w-5 text-green-500" />

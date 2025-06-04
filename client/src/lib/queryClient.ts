@@ -1,7 +1,8 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 // LemonLens API base URL
-const API_BASE_URL = "https://lemonlensapp.com/api/v1";
+// const API_BASE_URL = "https://lemonlensapp.com/api/v1";
+const API_BASE_URL = "http://localhost:8000/api/v1";
 
 // Add API key accessor for use throughout the application
 export const getApiKey = () => process.env.VEHICLE_API_KEY || import.meta.env.VITE_VEHICLE_API_KEY || "";
@@ -35,20 +36,34 @@ export async function apiRequest(
   }
   
   // Build full URL (ensure endpoint doesn't start with /)
-  const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+  let url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+  
+  // Add session_id as query parameter if not authenticated and sessionId exists
+  if (!token) {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      const separator = url.includes('?') ? '&' : '?';
+      url += `${separator}session_id=${sessionId}`;
+    }
+  }
   
   // Prepare headers
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "X-API-Key": import.meta.env.VITE_VEHICLE_API_KEY || "",
     ...customHeaders
   };
   
-  // Add authorization header if token exists
+  // Add API key authorization for all requests
+  const apiKey = import.meta.env.VITE_VEHICLE_API_KEY;
+  if (apiKey) {
+    headers["Authorization"] = `Bearer ${apiKey}`;
+  }
+  
+  // Add user authorization header if token exists (for authenticated user requests)
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
-    console.log("Added Authorization header for request", endpoint);
+    console.log("Added user Authorization header for request", endpoint);
   }
 
   const res = await fetch(url, {
@@ -66,7 +81,7 @@ export const getQueryFn: <T>(options: {
   on401: UnauthorizedBehavior;
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
+  async ({ queryKey }: { queryKey: any }) => {
     // Get key and params
     const [endpoint, params] = queryKey;
     
@@ -84,17 +99,16 @@ export const getQueryFn: <T>(options: {
       }
     }
     
-    // Get session ID from localStorage if available and not authenticated
-    const sessionId = !token ? localStorage.getItem("sessionId") : null;
-    
     // Build URL with query parameters
     let url = `${API_BASE_URL}${(endpoint as string).startsWith('/') ? endpoint : '/' + endpoint}`;
     
-    // Add session_id as query parameter if available
-    if (sessionId && !url.includes('?')) {
-      url += `?session_id=${sessionId}`;
-    } else if (sessionId) {
-      url += `&session_id=${sessionId}`;
+    // Add session_id as query parameter if not authenticated
+    if (!token) {
+      const sessionId = localStorage.getItem("sessionId");
+      if (sessionId) {
+        const separator = url.includes('?') ? '&' : '?';
+        url += `${separator}session_id=${sessionId}`;
+      }
     }
     
     // Add additional query parameters if provided
@@ -108,7 +122,8 @@ export const getQueryFn: <T>(options: {
       
       const queryString = searchParams.toString();
       if (queryString) {
-        url += url.includes('?') ? `&${queryString}` : `?${queryString}`;
+        const separator = url.includes('?') ? '&' : '?';
+        url += `${separator}${queryString}`;
       }
     }
     
@@ -117,14 +132,17 @@ export const getQueryFn: <T>(options: {
       "Accept": "application/json"
     };
     
-    // Add authorization header if token exists
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-      console.log("Added Authorization header for GET request", endpoint);
+    // Add API key authorization for all requests
+    const apiKey = import.meta.env.VITE_VEHICLE_API_KEY;
+    if (apiKey) {
+      headers["Authorization"] = `Bearer ${apiKey}`;
     }
     
-    // Always include API key for LemonLens API
-    headers["X-API-Key"] = import.meta.env.VITE_VEHICLE_API_KEY || "";
+    // Add user authorization header if token exists (for authenticated user requests)
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      console.log("Added user Authorization header for GET request", endpoint);
+    }
     
     const res = await fetch(url, {
       headers

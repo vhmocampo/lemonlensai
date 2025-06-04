@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserCredits } from "@/hooks/useUserCredits";
 import { useLocation, Link } from "wouter";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
-import { Eye } from "lucide-react";
+import { Eye, Coins } from "lucide-react";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const { data: userData } = useUserCredits(); // This will poll for credits when authenticated
   const [, setLocation] = useLocation();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
@@ -31,7 +33,7 @@ export default function Header() {
             {/* Navigation */}
             <nav className="hidden md:ml-10 md:flex md:space-x-8">
               <Link href="/how-it-works" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
-                How it Works
+                Our Process
               </Link>
             </nav>
           </div>
@@ -71,7 +73,21 @@ export default function Header() {
                     </div>
                   </button>
                   {menuOpen && (
-                    <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                      {/* Credits display */}
+                        <div className="px-4 py-3 border-b border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-900">Credits</span>
+                          <div className="flex items-center">
+                          <span className="bg-lemon-100 text-lemon-800 px-2 py-1 rounded-full flex items-center">
+                            <Coins className="h-4 w-4 text-lemon-500 mr-1" />
+                            <span className="text-sm font-bold">
+                            {user.credits !== undefined ? user.credits : (userData?.credits ?? '...')}
+                            </span>
+                          </span>
+                          </div>
+                        </div>
+                        </div>
                       <button 
                         onClick={() => {
                           logout();

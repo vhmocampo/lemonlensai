@@ -15,7 +15,6 @@ interface RegisterModalProps {
 }
 
 const formSchema = z.object({
-  username: z.string().min(2, "Username must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   passwordConfirmation: z.string().min(6, "Password must be at least 6 characters"),
@@ -32,7 +31,6 @@ export default function RegisterModal({ open, onClose, onOpenLogin }: RegisterMo
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -41,7 +39,7 @@ export default function RegisterModal({ open, onClose, onOpenLogin }: RegisterMo
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await register(data.username, data.email, data.password);
+      await register(data.email, data.email, data.password);
       onClose();
       form.reset();
     } catch (error) {
@@ -68,29 +66,32 @@ export default function RegisterModal({ open, onClose, onOpenLogin }: RegisterMo
           </DialogDescription>
         </DialogHeader>
 
-        <div className="absolute top-0 right-0 pt-4 pr-4">
-          <button
-            onClick={onClose}
-            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lemon-500"
-          >
-            <span className="sr-only">Close</span>
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-
         <Button
           variant="outline"
           onClick={handleGoogleLogin}
           className="w-full justify-center border-gray-300 mt-2"
           disabled={isLoading}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
+          <svg 
+            viewBox="0 0 48 48" 
             className="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
           >
-            <path d="M10 0C4.477 0 0 4.477 0 10C0 15.523 4.477 20 10 20C15.523 20 20 15.523 20 10C20 4.477 15.523 0 10 0ZM14.7 12.8C14.4 13.3 14 13.7 13.5 14C13 14.3 12.5 14.5 11.9 14.6C11.3 14.7 10.7 14.7 10 14.7C8.6 14.7 7.3 14.3 6.2 13.4C5.1 12.5 4.4 11.4 4.1 10C3.8 8.6 4 7.3 4.7 6.1C5.4 4.9 6.4 4 7.8 3.4C9.2 2.8 10.7 2.7 12.3 3.1C13.9 3.5 15.1 4.4 16 5.7L14 7.4C13.5 6.6 12.8 6 11.9 5.7C11 5.4 10.1 5.5 9.3 5.9C8.5 6.3 7.9 6.9 7.5 7.7C7.1 8.5 7 9.3 7.2 10.2C7.4 11.1 7.9 11.8 8.6 12.3C9.3 12.8 10.1 13 11 13C11.6 13 12.1 12.9 12.6 12.6C13.1 12.3 13.5 12 13.7 11.5C13.9 11 14 10.5 14 10H10V8H16C16.2 8.9 16.1 9.8 15.8 10.7C15.5 11.5 15.1 12.2 14.7 12.8Z" />
+            <path
+              fill="#FFC107"
+              d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+            />
+            <path
+              fill="#FF3D00"
+              d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
+            />
+            <path
+              fill="#4CAF50"
+              d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+            />
+            <path
+              fill="#1976D2"
+              d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+            />
           </svg>
           Continue with Google
         </Button>
@@ -106,24 +107,6 @@ export default function RegisterModal({ open, onClose, onOpenLogin }: RegisterMo
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your name"
-                      {...field}
-                      autoComplete="name"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="email"
