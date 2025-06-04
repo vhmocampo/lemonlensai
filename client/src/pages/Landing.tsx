@@ -412,7 +412,7 @@ export default function Landing() {
       <section className="py-20 bg-yellow-500">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to know your vehicle's true health?
+            Ready to get started?
           </h2>
           <p className="text-xl text-white opacity-90 max-w-2xl mx-auto mb-8">
             Join thousands of smart vehicle owners who use LemonLens.ai to avoid
@@ -437,7 +437,7 @@ export default function Landing() {
                 <span className="text-xl font-bold">LemonLens.ai</span>
               </div>
               <p className="text-gray-400">
-                AI-powered vehicle health analysis for informed decisions.
+                AI-powered car analysis for smart buyers.
               </p>
             </div>
             <div>
