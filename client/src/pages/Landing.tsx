@@ -218,10 +218,10 @@ export default function Landing() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Getting Started
+              How it works?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting your premium report is fast and easy! <br/> Skip hours of research and get straight to the facts.
+              Get your premium report in minutes.
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
@@ -236,8 +236,7 @@ export default function Landing() {
                 Enter Vehicle Details
               </h3>
               <p className="text-gray-600">
-                Provide your vehicle's make, model, year, and current mileage. <br/>
-                Copy and paste the listing, a CarFax page or any other information you have.
+                Enter your car’s make, model, year, and mileage. Paste in a listing, Carfax, or any details you have—easy!
               </p>
             </div>
             <div className="text-center">
@@ -251,7 +250,7 @@ export default function Landing() {
                 AI Analysis
               </h3>
               <p className="text-gray-600">
-                We'll then process your data, reviewing it against our comprehensive models and build a report.
+                Our AI instantly reviews your info against thousands of real-world cases and builds your custom report.
               </p>
             </div>
             <div className="text-center">
@@ -265,7 +264,7 @@ export default function Landing() {
                 Premium Report
               </h3>
               <p className="text-gray-600">
-                Just moments after, you'll have a report with inspection suggestions, estimated repairs, tips and more!
+                Get your detailed report in moments—including inspection tips, repair estimates, and key insights.
               </p>
             </div>
             <div className="text-center">
@@ -279,8 +278,7 @@ export default function Landing() {
                 Make Informed Decisions
               </h3>
               <p className="text-gray-600">
-                Use your report to plan maintenance, negotiate car purchases, or
-                re-submit with newly discovered info to get a more and more accurate score!
+                Use your report to plan maintenance, negotiate with sellers, or submit new details for even more accurate results.
               </p>
             </div>
           </div>
