@@ -118,19 +118,18 @@ export default function Landing() {
       <section className="container mx-auto px-4 py-20 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-10 md:mb-0">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Avoid Expensive Surprises!
+            Buy better used cars.
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Get instant, unbiased reports on reliability, common repairs, and
-            what to check before you sign. <br />
-            Don't let hidden problems cost you thousands later.
+            Our premium LemonLens reports can help you save thousands on unexpected repairs.<br />
+            Standard reports are free, no credit card needed. Forever.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
               onClick={openRegisterModal}
             >
-              Sign Up for a FREE Report!
+              Get one FREE Premium Report
             </Button>
             <Button
               variant="outline"
@@ -150,9 +149,9 @@ export default function Landing() {
             />
             <div className="absolute -bottom-4 -left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
               <div className="text-sm font-medium">
-                Common wihout maintenance
+                The average used car buyer faces
               </div>
-              <div className="text-lg font-bold">$3,500+ Engine Rebuild</div>
+              <div className="text-lg font-bold">$2,500+ in unexpected repairs</div>
             </div>
           </div>
         </div>
