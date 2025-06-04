@@ -157,12 +157,12 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="bg-gray-50 py-20">
+      {/* How It Works Section */}
+      <section id="how-it-works" className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              How can we help?
+              How it works?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Simply enter your vehicle details!<br/>
@@ -213,15 +213,15 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20">
+      {/* Features Section */}
+      <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              How it works?
+              Get started now.
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get your premium report in minutes.
+              You can get your premium report in minutes!
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
