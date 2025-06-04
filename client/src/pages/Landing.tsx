@@ -121,7 +121,7 @@ export default function Landing() {
             Buy better used cars.
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Our premium LemonLens reports can help you save thousands on unexpected repairs.<br />
+            Our premium reports can help you save thousands on unexpected repairs.<br />
             Standard reports are free, no credit card needed. Forever.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -162,11 +162,11 @@ export default function Landing() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose LemonLens.ai?
+              How can we help?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Our platform uses advanced algorithms to analyze millions of real
-              vehicle complaints and service records.
+              Simply enter your vehicle details!<br/>
+              We’ll analyze the data and highlight any hidden problems—so you can buy with confidence.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -176,12 +176,10 @@ export default function Landing() {
                   <LineChart />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Predictive Analysis
+                  Smart Analysis
                 </h3>
                 <p className="text-gray-600">
-                  Our AI model predicts potential issues based on your vehicle's
-                  make, model, year, and mileage, using data from millions of
-                  real-world reports.
+                  We use AI to analyze real complaints from thousands of vehicles, surfacing the issues that matter most to you.
                 </p>
               </CardContent>
             </Card>
@@ -194,9 +192,7 @@ export default function Landing() {
                   Reliability Scoring
                 </h3>
                 <p className="text-gray-600">
-                  Get a comprehensive reliability score for your vehicle, with
-                  detailed breakdowns of potential issues by system and
-                  severity.
+                  Our reliability score and recommendation engine gives you a fast, detailed answer—much more than a typical listing.
                 </p>
               </CardContent>
             </Card>
@@ -209,9 +205,7 @@ export default function Landing() {
                   Repair Estimates
                 </h3>
                 <p className="text-gray-600">
-                  Get accurate repair cost estimates for potential issues,
-                  helping you budget for future maintenance and avoid unexpected
-                  expenses.
+                  We don’t just spot likely issues, but we also estimate what they’ll cost, using trusted industry data. Premium reports include likelihood percentages and local, zip code-based estimates.
                 </p>
               </CardContent>
             </Card>
@@ -224,11 +218,10 @@ export default function Landing() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              How It Works
+              Getting Started
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting a comprehensive vehicle health report is easy with
-              LemonLens.ai
+              Getting your premium report is fast and easy! <br/> Skip hours of research and get straight to the facts.
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
@@ -243,7 +236,8 @@ export default function Landing() {
                 Enter Vehicle Details
               </h3>
               <p className="text-gray-600">
-                Provide your vehicle's make, model, year, and current mileage
+                Provide your vehicle's make, model, year, and current mileage. <br/>
+                Copy and paste the listing, a CarFax page or any other information you have.
               </p>
             </div>
             <div className="text-center">
@@ -257,8 +251,7 @@ export default function Landing() {
                 AI Analysis
               </h3>
               <p className="text-gray-600">
-                Our algorithms analyze millions of data points to identify
-                potential issues
+                We'll then process your data, reviewing it against our comprehensive models and build a report.
               </p>
             </div>
             <div className="text-center">
@@ -269,11 +262,10 @@ export default function Landing() {
                 </div>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Detailed Report
+                Premium Report
               </h3>
               <p className="text-gray-600">
-                Receive a comprehensive health report with prioritized
-                maintenance recommendations
+                Just moments after, you'll have a report with inspection suggestions, estimated repairs, tips and more!
               </p>
             </div>
             <div className="text-center">
@@ -288,7 +280,7 @@ export default function Landing() {
               </h3>
               <p className="text-gray-600">
                 Use your report to plan maintenance, negotiate car purchases, or
-                track your vehicle's health
+                re-submit with newly discovered info to get a more and more accurate score!
               </p>
             </div>
           </div>
