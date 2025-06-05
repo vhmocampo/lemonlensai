@@ -10,6 +10,8 @@ import HowItWorks from "@/pages/HowItWorks";
 import ReportDetail from "@/pages/ReportDetail";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
+import Success from "@/pages/Success";
+import Fail from "@/pages/Fail";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -30,6 +32,8 @@ function Router() {
       <Route path="/report/:reportId" component={ReportDetail} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/success" component={Success} />
+      <Route path="/fail" component={Fail} />
       <Route component={NotFound} />
     </Switch>
   );

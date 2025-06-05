@@ -5,12 +5,14 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useVehicleData } from "@/hooks/useVehicleData";
 import { useReports } from "@/hooks/useReports";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import CheckoutButton from "@/components/CheckoutButton";
 import {
   Tooltip,
   TooltipContent,
@@ -54,6 +56,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
   
   const { createReport, isCreating } = useReports();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -121,7 +124,21 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
     <TooltipProvider>
       <div className="p-6">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Vehicle Report Generator</h2>
-        <p className="mb-6 text-gray-600">Enter make, model year and mileage for standard reports. Submitting a zip code and more information will deduct from premium credits.</p>
+        { user && (
+            <div className="mb-6 mt-4">
+                <p className="mb-4 text-sm text-gray-600">
+                You have <span className="font-bold">{user.credits}</span> credits available.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <CheckoutButton bestValue={true} label="$19.99 - Purchase 30 Credits" priceId="price_1RWS1rQunztWl8kFBkpSFBmm" />
+                  <CheckoutButton label="$5.00 -  Purchase 1 Credit" priceId="price_1RWS0bQunztWl8kFzil9Bffh" />
+                </div>
+            </div>
+        )}
+        <p className="mb-6 text-gray-600">
+          Enter make, model year and mileage for standard reports.
+          {user && " Submitting a zip code and more information will deduct from premium credits."}
+        </p>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -225,13 +242,14 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                           <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Premium feature - Get location-specific repair cost estimates</p>
+                          <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Get location-specific repair cost estimates"}</p>
                         </TooltipContent>
                       </Tooltip>
                     </FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="e.g. 90210" 
+                        disabled={!user || user.credits === 0}
                         {...field} 
                       />
                     </FormControl>
@@ -271,7 +289,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                         <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Premium feature - Get personalized analysis based on your specific concerns</p>
+                        <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Get personalized analysis based on your specific concerns"}</p>
                       </TooltipContent>
                     </Tooltip>
                   </FormLabel>
@@ -279,6 +297,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                     <Textarea 
                       placeholder="Any additional details about the vehicle, such as a listing page, CarFax report or answers from a dealer. You can copy and paste here."
                       className="min-h-[100px]"
+                      disabled={!user || user.credits === 0}
                       {...field} 
                     />
                   </FormControl>

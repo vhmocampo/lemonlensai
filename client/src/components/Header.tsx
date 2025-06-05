@@ -29,7 +29,7 @@ export default function Header() {
               </div>
               <span className="text-xl font-bold text-gray-900">LemonLens.ai</span>
             </div>
-            
+
             {/* Navigation */}
             <nav className="hidden md:ml-10 md:flex md:space-x-8">
               <Link href="/how-it-works" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
@@ -57,7 +57,7 @@ export default function Header() {
             ) : (
               /* Logged in state */
               <div className="flex items-center">
-                <span className="mr-3 text-sm text-gray-700">
+                <span className="mr-3 text-sm text-gray-700 max-w-[200px] truncate hidden sm:inline-block">
                   Hi, {user.username || 'User'}
                 </span>
                 <div className="relative">
@@ -74,28 +74,33 @@ export default function Header() {
                   </button>
                   {menuOpen && (
                     <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                      {/* User info display */}
+                      <div className="px-4 py-3 border-b border-gray-100">
+                      <div className="text-sm font-medium text-gray-900">Username</div>
+                      <div className="text-sm text-gray-500 truncate">{user.email}</div>
+                      </div>
                       {/* Credits display */}
-                        <div className="px-4 py-3 border-b border-gray-100">
+                      <div className="px-4 py-3 border-b border-gray-100">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-900">Credits</span>
-                          <div className="flex items-center">
-                          <span className="bg-lemon-100 text-lemon-800 px-2 py-1 rounded-full flex items-center">
-                            <Coins className="h-4 w-4 text-lemon-500 mr-1" />
-                            <span className="text-sm font-bold">
-                            {user.credits !== undefined ? user.credits : (userData?.credits ?? '...')}
-                            </span>
+                        <span className="text-sm font-medium text-gray-900">Credits</span>
+                        <div className="flex items-center">
+                        <span className="bg-lemon-100 text-lemon-800 px-2 py-1 rounded-full flex items-center">
+                          <Coins className="h-4 w-4 text-lemon-500 mr-1" />
+                          <span className="text-sm font-bold">
+                          {user.credits !== undefined ? user.credits : (userData?.credits ?? '...')}
                           </span>
-                          </div>
+                        </span>
                         </div>
                         </div>
+                      </div>
                       <button 
-                        onClick={() => {
-                          logout();
-                          setMenuOpen(false);
-                        }} 
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        logout();
+                        setMenuOpen(false);
+                      }} 
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        Sign out
+                      Sign out
                       </button>
                     </div>
                   )}
