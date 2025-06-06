@@ -15,6 +15,7 @@ import {
   BarChart4,
   Wrench,
   ShieldQuestion,
+  Star,
 } from "lucide-react";
 import RegisterModal from "@/components/auth/RegisterModal";
 import LoginModal from "@/components/auth/LoginModal";
@@ -130,7 +131,7 @@ export default function Landing() {
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
               onClick={openRegisterModal}
             >
-              Get one FREE Premium Report
+              Get your Free Premium Report
             </Button>
             <Button
               variant="outline"
@@ -144,7 +145,7 @@ export default function Landing() {
         <div className="md:w-1/2 flex justify-center">
           <div className="relative">
             <img
-              src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+              src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Mechanic working on car engine in garage"
               className="rounded-lg shadow-xl w-full max-w-lg"
             />
@@ -166,8 +167,7 @@ export default function Landing() {
               What is LemonLens AI?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We help used car buyers make informed decisions!<br/>
-              Our AI analyzes real-world vehicle data to provide detailed reports on potential issues, repair costs, and reliability scores.
+              LemonLens.ai helps you make smarter used car decisions. <br /> Instantly get detailed reports on any potential issues, repair costs, and reliability; all based on real-world data.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -297,7 +297,7 @@ export default function Landing() {
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
               onClick={openRegisterModal}
             >
-              Sign up for one FREE Premium Report
+              Sign up to get your first report free!
             </Button>
           </div>
         </div>
@@ -335,11 +335,15 @@ export default function Landing() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>One free premium report when you sign up</span>
+                    <span>Plus (1) free premium report when you sign up</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
                     <span>General reliability score & common issues</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
+                    <span>No credit card needed!</span>
                   </li>
                 </ul>
                 <Button
@@ -424,6 +428,88 @@ export default function Landing() {
                 >
                   Buy One Report
                 </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              What Our Users Say
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Join the hundreds of satisfied customers who have saved money and made informed decisions with LemonLens.ai!
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="User avatar"
+                    className="w-12 h-12 rounded-full object-cover mr-3"
+                  />
+                  <div>
+                    <h4 className="font-bold text-gray-900">Mike L.</h4>
+                    <div className="flex text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "LemonLens.ai helped me compare several Nissan 370z listings and find one with the best score—super easy and trustworthy!"
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="User avatar"
+                    className="w-12 h-12 rounded-full object-cover mr-3"
+                  />
+                  <div>
+                    <h4 className="font-bold text-gray-900">Tori C.</h4>
+                    <div className="flex text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "I used LemonLens.ai to search for a reliable car within my budget. The standard report impressed me, so I tried premium and found a hidden gem—a 2012 Honda Odyssey nearby!"
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="User avatar"
+                    className="w-12 h-12 rounded-full object-cover mr-3"
+                  />
+                  <div>
+                    <h4 className="font-bold text-gray-900">David R.</h4>
+                    <div className="flex text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "I brought my LemonLens.ai premium report for an LS460 to the dealer, updated it with their info, and discovered a costly timing belt replacement—saved me from a bad deal!"
+                </p>
               </CardContent>
             </Card>
           </div>
