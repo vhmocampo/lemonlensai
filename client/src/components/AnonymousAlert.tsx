@@ -13,16 +13,8 @@ export default function AnonymousAlert() {
               <Info className="h-5 w-5 text-gray-900" />
             </span>
             <p className="ml-3 text-sm font-medium text-gray-800">
-              You're browsing as a guest. <span className="hidden sm:inline">Your reports will be saved to this device only.</span>
+              You're browsing as a guest. <span className="hidden sm:inline">Your reports will not be saved, sign up to save reports.</span>
             </p>
-          </div>
-          <div className="order-3 mt-2 sm:mt-0 sm:ml-3">
-            <button 
-              onClick={loginWithModal}
-              className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-lemon-300 hover:bg-lemon-400 rounded-md"
-            >
-              Sign in to save reports
-            </button>
           </div>
         </div>
       </div>

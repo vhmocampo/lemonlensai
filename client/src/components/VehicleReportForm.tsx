@@ -137,7 +137,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
         )}
         <p className="mb-6 text-gray-600">
           Enter make, model year and mileage for standard reports.
-          {user && " Submitting a zip code and more information will deduct from premium credits."}
+          {user && " Submitting a zip code and more information will use (1) premium credit."}
         </p>
 
         <Form {...form}>

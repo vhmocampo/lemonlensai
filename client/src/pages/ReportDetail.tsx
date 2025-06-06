@@ -96,7 +96,9 @@ export default function ReportDetail() {
 
   // Return to reports list
   const goBack = () => {
-    setLocation("/");
+    console.log(user);
+    let location = (user) ? "/" : "/home";
+    setLocation(location);
   };
 
   // Helper for score color

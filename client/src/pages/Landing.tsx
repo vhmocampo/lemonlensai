@@ -14,6 +14,7 @@ import {
   Zap,
   BarChart4,
   Wrench,
+  ShieldQuestion,
 } from "lucide-react";
 import RegisterModal from "@/components/auth/RegisterModal";
 import LoginModal from "@/components/auth/LoginModal";
@@ -71,16 +72,16 @@ export default function Landing() {
         </div>
         <nav className="hidden md:flex space-x-6 items-center">
           <a
-            href="#features"
+            href="#get-started"
             className="text-gray-600 hover:text-yellow-500 transition-colors"
           >
-            Features
+            Get Started
           </a>
           <a
             href="#how-it-works"
             className="text-gray-600 hover:text-yellow-500 transition-colors"
           >
-            How It Works
+            What is it?
           </a>
           <a
             href="#pricing"
@@ -136,7 +137,7 @@ export default function Landing() {
               className="border-gray-300 text-gray-700 hover:bg-gray-100 px-8 py-6 text-lg"
               onClick={startAnonymous}
             >
-              Run Standard Report
+              See an Example Report
             </Button>
           </div>
         </div>
@@ -162,11 +163,11 @@ export default function Landing() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              How it works?
+              What is LemonLens AI?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Simply enter your vehicle details!<br/>
-              We’ll analyze the data and highlight any hidden problems—so you can buy with confidence.
+              We help used car buyers make informed decisions!<br/>
+              Our AI analyzes real-world vehicle data to provide detailed reports on potential issues, repair costs, and reliability scores.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -210,11 +211,20 @@ export default function Landing() {
               </CardContent>
             </Card>
           </div>
+          <div className="text-center mt-12">
+            <Button
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100 px-8 py-6 text-lg"
+              onClick={startAnonymous}
+            >
+              See Example Report
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20">
+      {/* Get Started Section */}
+      <section id="get-started" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -282,6 +292,14 @@ export default function Landing() {
               </p>
             </div>
           </div>
+          <div className="text-center mt-12">
+            <Button
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-6 text-lg"
+              onClick={openRegisterModal}
+            >
+              Sign up for one FREE Premium Report
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -301,13 +319,13 @@ export default function Landing() {
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Free + Standard
+                    Free
                   </h3>
                   <div className="text-4xl font-bold text-gray-900 mb-2">
                     $0
                   </div>
                   <p className="text-gray-600">
-                    Perfect for trying out the product
+                    Perfect for trying out the service
                   </p>
                 </div>
                 <ul className="space-y-3 mb-6">
@@ -382,17 +400,21 @@ export default function Landing() {
                     $5
                   </div>
                   <p className="text-gray-600">
-                    Perfect for testing or one-off reports
+                    Buy as you go
                   </p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>All premium features</span>
+                    <span>All premium report features</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
-                    <span>Perfect for trying the service beyond the first free report</span>
+                    <span>Best for vehicle owners checking their vehicle health</span>
+                  </li>
+                  <li className="flex items-center">
+                    <ShieldQuestion className="text-yellow-500 mr-2 h-5 w-5" />
+                    <span>Consider buying in bulk if planning on running several</span>
                   </li>
                 </ul>
                 <Button
@@ -445,10 +467,10 @@ export default function Landing() {
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="#features"
+                    href="#get-started"
                     className="text-gray-400 hover:text-yellow-500 transition-colors"
                   >
-                    Features
+                    Get Started
                   </a>
                 </li>
                 <li>
@@ -456,7 +478,7 @@ export default function Landing() {
                     href="#how-it-works"
                     className="text-gray-400 hover:text-yellow-500 transition-colors"
                   >
-                    How it works
+                    What is it?
                   </a>
                 </li>
                 <li>
@@ -472,6 +494,22 @@ export default function Landing() {
             <div>
               <h4 className="text-lg font-medium mb-4">Resources</h4>
               <ul className="space-y-2">
+                <li>
+                  <a
+                    href="/faq"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/how-it-works"
+                    className="text-gray-400 hover:text-yellow-500 transition-colors"
+                  >
+                    Our Process
+                  </a>
+                </li>
                 <li>
                   <button
                     onClick={openContactDialog}

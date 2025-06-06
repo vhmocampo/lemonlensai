@@ -103,13 +103,37 @@ export default function ReportItem({ report }: ReportItemProps) {
         onClick={() => setOpen(!open)}
         className="px-4 py-5 sm:px-6 flex justify-between items-center cursor-pointer"
       >
-        <div>
+        <div className="flex-1">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             {report.make} {report.model} {report.year}
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Report #{report.id} • {formatDate(report.createdAt || '')}
+            {formatDate(report.createdAt || '')}
           </p>
+          {/* Display score and recommendation for completed reports */}
+          {report.status === "completed" && report.result && (
+            <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              {report.result.score && (
+                <div className="flex items-center">
+                  <span className="text-xs font-medium text-gray-500 mr-1">Score:</span>
+                  <span className={`text-sm font-bold ${
+                    report.result.score >= 80 ? 'text-green-600' : 
+                    report.result.score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                  }`}>
+                    {report.result.score}/100
+                  </span>
+                </div>
+              )}
+              {report.result.recommendation && (
+                <div className="flex items-center">
+                  <span className="text-xs font-medium text-gray-500 mr-1">Recommendation:</span>
+                  <span className="text-sm font-medium text-blue-700">
+                    {report.result.recommendation}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex items-center space-x-3">
           {getStatusBadge()}
@@ -150,29 +174,7 @@ export default function ReportItem({ report }: ReportItemProps) {
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-gray-500">REPORT SUMMARY</h4>
-                  <div className="mt-2">
-                    {report.result && typeof report.result === 'object' && report.result.overallHealth ? (
-                      <div className="flex items-center">
-                        <div className="w-2/5">
-                          <div className="text-xs font-medium text-gray-500 uppercase">Overall Health</div>
-                          <div className="mt-1 flex items-center">
-                            <div className="flex-1 h-2 bg-gray-200 rounded-full">
-                              <div className="h-2 bg-green-500 rounded-full" style={{width: `${report.result.overallHealth}%`}}></div>
-                            </div>
-                            <span className="ml-2 text-sm font-medium text-gray-900">{report.result.overallHealth}%</span>
-                          </div>
-                        </div>
-                        <div className="w-3/5 pl-4">
-                          <div className="text-xs font-medium text-gray-500 uppercase">Reliability Score</div>
-                          <div className="text-2xl font-bold text-gray-900">
-                            {report.result.reliabilityScore ? `${report.result.reliabilityScore}/5.0` : 'N/A'}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-gray-500">Detailed results not available</div>
-                    )}
-                    
+                  <div className="mt-2">                    
                     {report.result && typeof report.result === 'object' && report.result.commonIssues && report.result.commonIssues.length > 0 && (
                       <div className="mt-4">
                         <div className="flex justify-between mb-1">
@@ -195,6 +197,20 @@ export default function ReportItem({ report }: ReportItemProps) {
                             </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+
+                    {report.result && typeof report.result === 'object' && report.result.suggestions && report.result.suggestions.length > 0 && (
+                      <div className="mt-4">
+                        <div className="text-xs font-medium text-gray-500 uppercase mb-2">Suggestions</div>
+                        <div className="space-y-1">
+                          {report.result.suggestions.map((suggestion: string, index: number) => (
+                            <div key={index} className="flex items-start">
+                              <CheckCircle className="h-3 w-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-gray-700">{suggestion}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -264,25 +280,7 @@ export default function ReportItem({ report }: ReportItemProps) {
               <AlertCircle className="mx-auto h-10 w-10 text-red-500" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">Report Generation Failed</h3>
               <p className="mt-1 text-sm text-gray-500">We couldn't generate your report. This could be due to insufficient data for your vehicle or a temporary system issue.</p>
-              <div className="mt-6">
-                <Button 
-                  onClick={handleRetry}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                  disabled={isRetrying}
-                >
-                  {isRetrying ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Retrying...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="-ml-1 mr-2 h-5 w-5" />
-                      Retry Report
-                    </>
-                  )}
-                </Button>
-              </div>
+
             </div>
           )}
         </div>

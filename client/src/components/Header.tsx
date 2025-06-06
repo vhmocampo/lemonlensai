@@ -29,13 +29,6 @@ export default function Header() {
               </div>
               <span className="text-xl font-bold text-gray-900">LemonLens.ai</span>
             </div>
-
-            {/* Navigation */}
-            <nav className="hidden md:ml-10 md:flex md:space-x-8">
-              <Link href="/how-it-works" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
-                Our Process
-              </Link>
-            </nav>
           </div>
           <div className="flex items-center">
             {/* Logged out state */}
