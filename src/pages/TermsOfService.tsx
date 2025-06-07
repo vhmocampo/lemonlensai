@@ -132,8 +132,7 @@ export default function TermsOfService() {
                   If you have any questions about these Terms of Service, please contact us at:
                 </p>
                 <ul className="list-none space-y-1 text-gray-700 mt-2">
-                  <li>Email: legal@lemonlens.ai</li>
-                  <li>Address: [Company Address]</li>
+                  <li>Email: support@lemonlens.ai</li>
                 </ul>
               </section>
             </div>

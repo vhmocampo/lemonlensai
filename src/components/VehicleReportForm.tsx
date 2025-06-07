@@ -283,7 +283,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center">
-                    More Information
+                    CarFax/Listing/Dealer Info
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
