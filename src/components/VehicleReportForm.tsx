@@ -248,7 +248,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="e.g. 90210" 
+                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "e.g. 90210"} 
                         disabled={!user || user.credits === 0}
                         {...field} 
                       />
@@ -295,7 +295,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   </FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Any additional details about the vehicle, such as a listing page, CarFax report or answers from a dealer. You can copy and paste here."
+                      placeholder={!user || user.credits === 0 ? "Premium Feature" : "Any additional details about the vehicle, such as a listing page, CarFax report or answers from a dealer. You can copy and paste here."}
                       className="min-h-[100px]"
                       disabled={!user || user.credits === 0}
                       {...field} 

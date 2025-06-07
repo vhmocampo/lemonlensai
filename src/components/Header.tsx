@@ -24,8 +24,10 @@ export default function Header() {
               onClick={() => setLocation("/")}
             >
               {/* Logo */}
-              <div className="h-10 w-10 rounded-full bg-lemon-500 flex items-center justify-center mr-2">
-                <Eye className="h-6 w-6 text-gray-900" />
+              <div className="flex items-center justify-center mr-2">
+                <div className="text-yellow-500 mr-2">
+                  <img src="/images/ll.png" alt="LemonLens.ai Logo" className="h-11 w-auto" />
+              </div>
               </div>
               <span className="text-xl font-bold text-gray-900">LemonLens.ai</span>
             </div>

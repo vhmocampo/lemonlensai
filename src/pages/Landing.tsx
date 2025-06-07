@@ -66,9 +66,9 @@ export default function Landing() {
       {/* Header/Navigation */}
       <header className="container mx-auto py-6 px-4 flex justify-between items-center">
         <div className="flex items-center">
-          <div className="text-yellow-500 mr-2">
-            <Car size={28} />
-          </div>
+            <div className="text-yellow-500 mr-2">
+              <img src="/images/ll.png" alt="LemonLens.ai Logo" className="h-11 w-auto" />
+            </div>
           <h1 className="text-2xl font-bold text-gray-900">LemonLens.ai</h1>
         </div>
         <nav className="hidden md:flex space-x-6 items-center">
@@ -76,7 +76,7 @@ export default function Landing() {
             href="#get-started"
             className="text-gray-600 hover:text-yellow-500 transition-colors"
           >
-            Get Started
+            Premium
           </a>
           <a
             href="#how-it-works"
@@ -456,11 +456,11 @@ export default function Landing() {
                   />
                   <div>
                     <h4 className="font-bold text-gray-900">Mike L.</h4>
-                    <div className="flex text-yellow-500">
+                    {/* <div className="flex text-yellow-500">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-current" />
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <p className="text-gray-600">
@@ -478,11 +478,6 @@ export default function Landing() {
                   />
                   <div>
                     <h4 className="font-bold text-gray-900">Tori C.</h4>
-                    <div className="flex text-yellow-500">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-current" />
-                      ))}
-                    </div>
                   </div>
                 </div>
                 <p className="text-gray-600">
@@ -500,11 +495,11 @@ export default function Landing() {
                   />
                   <div>
                     <h4 className="font-bold text-gray-900">David R.</h4>
-                    <div className="flex text-yellow-500">
+                    {/* <div className="flex text-yellow-500">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-current" />
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <p className="text-gray-600">
@@ -556,7 +551,7 @@ export default function Landing() {
                     href="#get-started"
                     className="text-gray-400 hover:text-yellow-500 transition-colors"
                   >
-                    Get Started
+                    Premium
                   </a>
                 </li>
                 <li>
