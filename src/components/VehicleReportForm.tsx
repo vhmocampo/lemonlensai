@@ -130,8 +130,8 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                 You have <span className="font-bold">{user.credits}</span> credits available.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <CheckoutButton bestValue={true} label="$19.99 - Purchase 30 Credits" priceId="price_1RWS1rQunztWl8kFBkpSFBmm" />
-                  <CheckoutButton label="$5.00 -  Purchase 1 Credit" priceId="price_1RWS0bQunztWl8kFzil9Bffh" />
+                  <CheckoutButton bestValue={true} label="$19.99 - Purchase 30 Credits" priceId="price_1RXOgAJBQdS2MAfi3kw5yS8V" />
+                  <CheckoutButton label="$5.00 -  Purchase 1 Credit" priceId="price_1RXOfdJBQdS2MAfiNXdWoLGf" />
                 </div>
             </div>
         )}
