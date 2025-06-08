@@ -295,7 +295,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                 render={({ field }) => (
                   <FormItem className="sm:col-span-6">
                     <FormLabel className="flex items-center">
-                      Listing Link
+                      Paste Car Listing URL (Optional)
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
@@ -308,7 +308,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                     <FormControl>
                       <Input 
                         type="url"
-                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "CarFax, Autotrader, CarGurus, etc."} 
+                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "Paste the single car URL from CarFax, Autotrader, CarGurus, or any dealer site. We’ll use it to extract more details automatically for a better report."} 
                         disabled={!user || user.credits === 0}
                         {...field} 
                       />
