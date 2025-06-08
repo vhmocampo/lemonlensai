@@ -37,6 +37,10 @@ const formSchema = z.object({
     val => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 1000000,
     { message: "Mileage must be a number between 1 and 1,000,000" }
   ),
+  listingLink: z.string().optional().refine(
+    val => !val || /^https?:\/\/.+\..+/.test(val),
+    { message: "Please enter a valid URL (starting with http:// or https://)" }
+  ),
   additionalInfo: z.string().optional(),
 });
 
@@ -66,6 +70,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
       year: "",
       zipCode: "",
       mileage: "",
+      listingLink: "",
       additionalInfo: "",
     },
   });
@@ -101,6 +106,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
         year: data.year,
         zipCode: data.zipCode,
         mileage: parseInt(data.mileage),
+        listingLink: data.listingLink || undefined,
         additionalInfo: data.additionalInfo || undefined,
       });
       
@@ -282,6 +288,35 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="listingLink"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-6">
+                    <FormLabel className="flex items-center">
+                      Listing Link
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Provide a link to the vehicle listing for enhanced analysis"}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="url"
+                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "CarFax, Autotrader, CarGurus, etc."} 
+                        disabled={!user || user.credits === 0}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormField
@@ -290,7 +325,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center">
-                    CarFax/Listing/Dealer Info
+                    Any additional information from the dealer
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
@@ -302,7 +337,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   </FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder={!user || user.credits === 0 ? "Premium Feature" : "Any additional details about the vehicle, such as a listing page, CarFax report or answers from a dealer. You can copy and paste here."}
+                      placeholder={!user || user.credits === 0 ? "Premium Feature" : "Any additional details about the vehicle, or responses from the dealer to your questions"}
                       className="min-h-[100px]"
                       disabled={!user || user.credits === 0}
                       {...field} 

@@ -47,7 +47,6 @@ export default function FAQ() {
                   Premium reports provide comprehensive analysis that goes far beyond basic vehicle information. They include:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
                     <li>Detailed inspection tips for when you view the car in person</li>
-                    <li>Accurate repair cost estimates based on your location</li>
                     <li>Analysis of Carfax data and vehicle history</li>
                     <li>Customized recommendations based on your specific situation</li>
                     <li>The ability to update reports as you gather more information</li>
@@ -93,10 +92,11 @@ export default function FAQ() {
                 <AccordionContent className="text-gray-700 leading-relaxed pt-2">
                   The more details you provide, the more accurate and useful your report will be. Consider submitting:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li><strong>Vehicle listings:</strong> Copy and paste the entire car listing from websites, dealers, or private sellers</li>
+                    <li><strong>Vehicle listings:</strong> Copy and paste the listing urls from websites, dealers, or private sellers</li>
                     <li><strong>Carfax or AutoCheck reports:</strong> Vehicle history reports with accident, service, and ownership details</li>
+                    <li><strong>Any additional information: Copy and paste any additional information or answers from sellers</strong></li>
                     <li><strong>Maintenance records:</strong> Service history, recent repairs, or maintenance documentation</li>
-                    <li><strong>Your location:</strong> Zip code for accurate local pricing and recommendations</li>
+                    <li><strong>Your location:</strong> Zip code for accurate local variables</li>
                     <li><strong>Specific concerns:</strong> Any particular issues or questions you have about the vehicle</li>
                     <li><strong>Seller information:</strong> Details about the seller or dealership</li>
                     <li><strong>Test drive notes:</strong> Observations from your inspection or test drive</li>

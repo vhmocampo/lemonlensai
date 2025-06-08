@@ -27,6 +27,7 @@ interface CreateReportInput {
   vin?: string;
   zipCode?: string;
   additionalInfo?: string;
+  listingLink?: string;
 }
 
 export function useReports() {
@@ -101,6 +102,10 @@ export function useReports() {
       // Add additionalInfo if provided
       if (input.additionalInfo) {
         payload.additionalInfo = input.additionalInfo;
+      }
+
+      if (input.listingLink) {
+        payload.listingLink = input.listingLink;
       }
       
       // Add session_id if user is not logged in

@@ -19,9 +19,9 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="md:flex md:items-center md:justify-between">
             <div className="flex justify-center space-x-6 md:order-2">
-              <Link href="/how-it-works" className="text-gray-400 hover:text-gray-500">
-                <span className="sr-only">Our Process</span>
-                <span className="text-sm">Our Process</span>
+              <Link href="/faq" className="text-gray-400 hover:text-gray-500">
+                <span className="sr-only">FAQ</span>
+                <span className="text-sm">FAQ</span>
               </Link>
               <Link href="/privacy-policy" className="text-gray-400 hover:text-gray-500">
                 <span className="sr-only">Privacy Policy</span>
