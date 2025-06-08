@@ -111,10 +111,17 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
       
       form.reset();
       onReportCreated();
-    } catch (error) {
+    } catch (error: any) {
+      // looks like 402: {"error":"Insufficient credits","required_credits":1,"current_credits":156}
+      const [code, jsonPart] = error?.message?.split(': ', 2);
+      const err = JSON.parse(jsonPart);
+      const isInsufficientFunds = code === 402 || err?.error === "Insufficient credits";
+
       toast({
         title: "Error",
-        description: "Failed to create report. Please try again.",
+        description: isInsufficientFunds
+          ? "You do not have enough credits to generate this report. Please purchase more credits."
+          : "An unexpected error occurred while generating the report.",
         variant: "destructive",
       });
     }

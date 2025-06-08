@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ChevronDown, Clock, AlertCircle, CheckCircle, RefreshCw, ExternalLink } from "lucide-react";
+import { ChevronDown, Clock, AlertCircle, CheckCircle, RefreshCw, ExternalLink, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useReports } from "@/hooks/useReports";
@@ -18,7 +18,7 @@ interface Report {
   updatedAt: string | null;
   userId: string | null;
   sessionId: string | null;
-  vin: string | null;
+  type: string | null;
   result: any;
 }
 
@@ -98,7 +98,9 @@ export default function ReportItem({ report }: ReportItemProps) {
   };
 
   return (
-    <div className="bg-gray-50 shadow sm:rounded-lg overflow-hidden">
+    <div className={`shadow sm:rounded-lg overflow-hidden ${
+      report.type === 'premium' ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200' : 'bg-gray-50'
+    }`}>
       <div 
         onClick={() => setOpen(!open)}
         className="px-4 py-5 sm:px-6 cursor-pointer"
@@ -106,9 +108,14 @@ export default function ReportItem({ report }: ReportItemProps) {
         {/* Mobile-first layout: Stack everything vertically on small screens */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 truncate">
-              {report.make} {report.model} {report.year}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg leading-6 font-medium text-gray-900 truncate">
+                {report.make} {report.model} {report.year}
+              </h3>
+              {report.type === 'premium' && (
+                <Star className="h-5 w-5 text-yellow-500 fill-current flex-shrink-0" />
+              )}
+            </div>
             <p className="mt-1 text-sm text-gray-500">
               {formatDate(report.createdAt || '')}
             </p>
@@ -275,7 +282,7 @@ export default function ReportItem({ report }: ReportItemProps) {
               )}
             </div>
           )}
-          
+
           {report.status === "processing" && (
             <div className="px-4 py-5 sm:p-6 text-center">
               <div className="animate-spin mx-auto h-10 w-10 text-yellow-500 border-4 border-current border-t-transparent rounded-full"></div>
@@ -283,12 +290,12 @@ export default function ReportItem({ report }: ReportItemProps) {
               <p className="mt-1 text-sm text-gray-500">This usually takes 1-2 minutes. You can close this page and check back later.</p>
             </div>
           )}
-          
+
           {report.status === "failed" && (
             <div className="px-4 py-5 sm:p-6 text-center">
               <AlertCircle className="mx-auto h-10 w-10 text-red-500" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">Report Generation Failed</h3>
-              <p className="mt-1 text-sm text-gray-500">We couldn't generate your report. This could be due to insufficient data for your vehicle or a temporary system issue.</p>
+              <p className="mt-1 text-sm text-gray-500">We couldn't generate your report. This could be due to temporary system issue. Credits were not deducted.</p>
 
             </div>
           )}

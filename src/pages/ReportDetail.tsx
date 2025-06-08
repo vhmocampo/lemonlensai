@@ -228,15 +228,27 @@ export default function ReportDetail() {
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle className="text-2xl">Vehicle Report</CardTitle>
-                <CardDescription>
-                  {report.make} {report.model} {report.year} •{" "}
-                  {report.mileage.toLocaleString()} mi
-                </CardDescription>
+          <CardTitle className="text-2xl flex items-center">
+            Vehicle Report
+            {report.type === "premium" && (
+              <span className="ml-2 text-yellow-500">★</span>
+            )}
+          </CardTitle>
+          <CardDescription>
+            {report.make} {report.model} {report.year} •{" "}
+            {report.mileage.toLocaleString()} mi
+          </CardDescription>
               </div>
-              <Badge variant="outline" className="bg-green-100 text-green-800">
-                Complete
-              </Badge>
+              <div className="flex items-center gap-2">
+          {report.type === "premium" && (
+            <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+              Premium ★
+            </Badge>
+          )}
+          <Badge variant="outline" className="bg-green-100 text-green-800">
+            Complete
+          </Badge>
+              </div>
             </div>
           </CardHeader>
         </Card>
@@ -254,11 +266,25 @@ export default function ReportDetail() {
               <div className="text-2xl font-bold text-blue-800 mb-4">
                 {result.recommendation}
               </div>
-              {result.summary && (
-                <p className="text-gray-700 leading-relaxed">
-                  {result.summary}
-                </p>
-              )}
+              <p className="text-gray-700 leading-relaxed">
+                {result.summary}
+                {result.questions && result.questions.length > 0 && (
+                  <span>
+                    <br />
+                    <br />
+                    <strong>Questions to consider:</strong>
+                    <ul className="list-disc pl-5 mt-2">
+                      {result.questions.map((q: string, index: number) => (
+                        <li key={index} className="text-gray-600">
+                          "{q}"
+                        </li>
+                      ))}
+                    </ul>
+                    <br /><br />
+                    <p>Once you get these answers, we can update your premium report for an even more accurate score!</p>
+                  </span>
+                )}
+              </p>
             </CardContent>
           </Card>
         )}
@@ -266,32 +292,42 @@ export default function ReportDetail() {
         {/* Score and Cost Overview */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
 
-{/* Cost Estimates */}
+        {/* Cost Estimates */}
           <Card className="border-2 border-orange-200">
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <DollarSign className="mr-2 h-5 w-5" />
-                Repair Cost Ranges
+                Cost Over 5 Years:
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Low end:</span>
+                  <span className="text-gray-600">Low Estimate:</span>
                   <span className="font-bold text-green-600">
                     $
                     {result.cost_from ? result.cost_from.toLocaleString() : "0"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">High end:</span>
+                  <span className="text-gray-600">High Estimate:</span>
                   <span className="font-bold text-red-600">
                     ${result.cost_to ? result.cost_to.toLocaleString() : "0"}
                   </span>
                 </div>
                 <div className="text-sm text-gray-500 mt-3 text-center">
-                  Based on highest reported repairs. <br /> Upgrade for zip code
-                  specific estimates.
+                  <br />
+                  {report.type === "standard" && (
+                    <>
+                      Based on highest reported repairs. <br /> Upgrade for more accurate, personalized estimates.
+                    </>
+                  )}
+                  {report.type === "premium" && (
+                      <>
+                        A range of costs based on repair likelihood <br /> Based on your provided information and our data.
+                      </>
+                    )
+                  }
                 </div>
               </div>
             </CardContent>
@@ -309,10 +345,40 @@ export default function ReportDetail() {
                 {result.score || 0}
               </div>
               <div className="text-sm text-gray-600">out of 100</div>
+              <div className="text-sm text-gray-500 mt-3 text-center">
+                This score reflects its price-to-repair ratio, <br /> compared against similar vehicles.
+              </div>
             </CardContent>
           </Card>
 
         </div>
+
+        {/* Checklist Section */}
+        {result.checklist && result.checklist.length > 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-xl">Your Personalized Checklist</CardTitle>
+              <CardDescription>
+                A list of to-dos when buying or maintaining this vehicle.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+
+                {result.checklist.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-start mb-4 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-700">{item}</p>
+                    </div>
+                  </div>
+                ))}
+
+            </CardContent>
+          </Card>
+        )}
 
         {/* Known Issues and Recalls Section - Side by Side when both exist */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -421,6 +487,7 @@ export default function ReportDetail() {
         </div>
 
         {/* Data Coverage Notice */}
+        {report.type === "standard" && (
         <Card className="mb-6 bg-blue-50 border-blue-200">
           <CardContent className="pt-6">
             <div className="flex items-start">
@@ -430,13 +497,13 @@ export default function ReportDetail() {
                   Report Coverage
                 </p>
                 <p className="text-blue-700">
-                  Listed repairs are based on general trends and may not apply to your specific vehicle. 
-                  <br />For detailed information unique to your car, consider upgrading to a premium report.
+                  Listed repairs are based on general trends and may not apply to your specific vehicle. <br />For detailed information unique to your car, consider upgrading to a premium report.
                 </p>
+
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card>)}
 
         {/* Complaints Section */}
         {result.complaints && Object.keys(result.complaints).length > 0 && (
@@ -505,28 +572,37 @@ export default function ReportDetail() {
                       </div>
 
                       <div className="bg-gray-50 p-3 rounded text-sm mb-3 flex items-center justify-between">
-                        <span className="text-gray-500">
-                          User report available on premium reports
-                        </span>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Badge variant="outline" className="cursor-help">
-                              Premium Feature <Info className="ml-1 h-3 w-3" />
-                            </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>
-                              Specific complaint details are only visible on
-                              premium reports
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
+                        {complaint.complaint ? (
+                          <span className="text-gray-700">
+                            <small>A user might say...</small> <br/>
+                            {complaint.complaint}
+                          </span>
+                        ) : (
+                          <>
+                            <span className="text-gray-500">
+                              User report available on premium reports
+                            </span>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge variant="outline" className="cursor-help">
+                                  Premium Feature <Info className="ml-1 h-3 w-3" />
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>
+                                  Specific complaint details are only visible on
+                                  premium reports
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
 
                       {complaint.likelyhood !== undefined && (
                         <div className="flex items-center">
                           <span className="text-gray-500 text-sm mr-2">
-                            Likelihood:{" "}
+                            Estimated Likelihood? :{" "}
                           </span>
                           {complaint.likelyhood === null ? (
                             <Tooltip>

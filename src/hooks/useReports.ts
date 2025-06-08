@@ -25,6 +25,8 @@ interface CreateReportInput {
   year: string;
   mileage: number;
   vin?: string;
+  zipCode?: string;
+  additionalInfo?: string;
 }
 
 export function useReports() {
@@ -71,7 +73,7 @@ export function useReports() {
         // Fields that might not be in the API response
         userId: null,
         sessionId: null,
-        vin: null,
+        type: apiReport.type || "standard", // Default to "vehicle" if not specified
         result: apiReport.result || {}
       }))
     : [];
@@ -89,6 +91,16 @@ export function useReports() {
       // Add VIN if provided
       if (input.vin) {
         payload.vin = input.vin;
+      }
+      
+      // Add zipCode if provided
+      if (input.zipCode) {
+        payload.zipCode = input.zipCode;
+      }
+      
+      // Add additionalInfo if provided
+      if (input.additionalInfo) {
+        payload.additionalInfo = input.additionalInfo;
       }
       
       // Add session_id if user is not logged in
