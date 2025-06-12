@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 interface VehicleReportFormProps {
   onReportCreated: () => void;
@@ -61,6 +62,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
   const { createReport, isCreating } = useReports();
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isPremiumMode, setIsPremiumMode] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -108,6 +110,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
         mileage: parseInt(data.mileage),
         listingLink: data.listingLink || undefined,
         additionalInfo: data.additionalInfo || undefined,
+        isPremium: isPremiumMode,
       });
       
       toast({
@@ -137,6 +140,37 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
     <TooltipProvider>
       <div className="p-6">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Vehicle Report Generator</h2>
+        
+        {/* Report Type Toggle */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">Report Type</h3>
+              <p className="text-sm text-gray-600">
+                {isPremiumMode ? "Premium reports include more accurate information and enhanced analysis" : "Standard reports provide basic vehicle health information"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <span className={`text-sm font-medium ${!isPremiumMode ? 'text-gray-900' : 'text-gray-500'}`}>
+                Standard
+              </span>
+              <Switch
+                checked={isPremiumMode}
+                onCheckedChange={setIsPremiumMode}
+                disabled={!user || user.credits === 0}
+              />
+              <span className={`text-sm font-medium ${isPremiumMode ? 'text-gray-900' : 'text-gray-500'}`}>
+                Premium
+              </span>
+            </div>
+          </div>
+          {(!user || user.credits === 0) && (
+            <p className="text-sm text-amber-600 mt-2">
+              {!user ? "Sign up to access premium features" : "Purchase credits to access premium features"}
+            </p>
+          )}
+        </div>
+
         { user && (
             <div className="mb-6 mt-4">
                 <p className="mb-4 text-sm text-gray-600">
@@ -148,9 +182,12 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                 </div>
             </div>
         )}
+        
         <p className="mb-6 text-gray-600">
-          Enter make, model year and mileage for standard reports.
-          {user && " Submitting a zip code and more information will use (1) premium credit."}
+          {isPremiumMode 
+            ? "Premium reports provide detailed analysis with more accurate repair costs and enhanced insights."
+            : "Standard reports provide basic vehicle health information including common issues and recalls."
+          }
         </p>
 
         <Form {...form}>
@@ -243,39 +280,44 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="zipCode"
-                render={({ field }) => (
-                  <FormItem className="sm:col-span-2">
-                    <FormLabel className="flex items-center">
-                      Zip Code
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Get location-specific repair cost estimates"}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "e.g. 90210"} 
-                        disabled={!user || user.credits === 0}
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Conditional Premium Fields */}
+              {isPremiumMode && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="zipCode"
+                    render={({ field }) => (
+                      <FormItem className="sm:col-span-2">
+                        <FormLabel className="flex items-center">
+                          Zip Code
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Get location-specific repair cost estimates</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g. 90210" 
+                            disabled={!user || user.credits === 0}
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
 
               <FormField
                 control={form.control}
                 name="mileage"
                 render={({ field }) => (
-                  <FormItem className="sm:col-span-4">
+                  <FormItem className={isPremiumMode ? "sm:col-span-4" : "sm:col-span-6"}>
                     <FormLabel>Current Mileage</FormLabel>
                     <FormControl>
                       <Input 
@@ -289,26 +331,61 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                 )}
               />
 
+              {isPremiumMode && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="listingLink"
+                    render={({ field }) => (
+                      <FormItem className="sm:col-span-6">
+                        <FormLabel className="flex items-center">
+                          Paste Car Listing URL (Optional)
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Provide a link to the vehicle listing for enhanced analysis</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="url"
+                            placeholder="Paste the single car URL from CarFax, Autotrader, CarGurus, or any dealer site. We'll use it to extract more details automatically for a better report." 
+                            disabled={!user || user.credits === 0}
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+            </div>
+
+            {isPremiumMode && (
               <FormField
                 control={form.control}
-                name="listingLink"
+                name="additionalInfo"
                 render={({ field }) => (
-                  <FormItem className="sm:col-span-6">
+                  <FormItem>
                     <FormLabel className="flex items-center">
-                      Paste Car Listing URL (Optional)
+                      Any additional information from the dealer
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Provide a link to the vehicle listing for enhanced analysis"}</p>
+                          <p>Get personalized analysis based on your specific concerns</p>
                         </TooltipContent>
                       </Tooltip>
                     </FormLabel>
                     <FormControl>
-                      <Input 
-                        type="url"
-                        placeholder={!user || user.credits === 0 ? "Premium Feature" : "Paste the single car URL from CarFax, Autotrader, CarGurus, or any dealer site. We’ll use it to extract more details automatically for a better report."} 
+                      <Textarea 
+                        placeholder="Any additional details about the vehicle, or responses from the dealer to your questions"
+                        className="min-h-[100px]"
                         disabled={!user || user.credits === 0}
                         {...field} 
                       />
@@ -317,36 +394,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   </FormItem>
                 )}
               />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="additionalInfo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center">
-                    Any additional information from the dealer
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="ml-1 h-3 w-3 text-gray-400 cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{!user ? "Sign up to access premium features" : user.credits === 0 ? "Purchase credits to access premium features" : "Premium feature - Get personalized analysis based on your specific concerns"}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder={!user || user.credits === 0 ? "Premium Feature" : "Any additional details about the vehicle, or responses from the dealer to your questions"}
-                      className="min-h-[100px]"
-                      disabled={!user || user.credits === 0}
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            )}
 
             <Button 
               type="submit" 
@@ -359,7 +407,7 @@ export default function VehicleReportForm({ onReportCreated }: VehicleReportForm
                   Processing...
                 </>
               ) : (
-                "Generate Report"
+                `Generate ${isPremiumMode ? 'Premium' : 'Standard'} Report`
               )}
             </Button>
           </form>

@@ -28,6 +28,7 @@ interface CreateReportInput {
   zipCode?: string;
   additionalInfo?: string;
   listingLink?: string;
+  isPremium?: boolean;
 }
 
 export function useReports() {
@@ -87,6 +88,7 @@ export function useReports() {
         model: input.model,
         year: parseInt(input.year), // Convert to integer as required by API
         mileage: input.mileage,
+        isPremium: input.isPremium || false,
       };
       
       // Add VIN if provided

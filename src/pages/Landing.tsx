@@ -518,7 +518,7 @@ export default function Landing() {
             Ready to get started?
           </h2>
           <p className="text-xl text-white opacity-90 max-w-2xl mx-auto mb-8">
-            Join thousands of smart vehicle owners who use LemonLens.ai to avoid
+            Join hundreds of smart vehicle owners who use LemonLens.ai to avoid
             unexpected repairs and make informed decisions.
           </p>
           <Button
@@ -536,7 +536,9 @@ export default function Landing() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <Car className="text-yellow-500 mr-2" />
+                <div className="text-yellow-500 mr-2">
+                  <img src="/images/ll.png" alt="LemonLens.ai Logo" className="h-11 w-auto" />
+                </div>
                 <span className="text-xl font-bold">LemonLens.ai</span>
               </div>
               <p className="text-gray-400">
